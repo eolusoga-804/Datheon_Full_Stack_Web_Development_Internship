@@ -7,10 +7,26 @@
   --font-heading: "DynaPuff", ui-rounded, system-ui, sans-serif;
 }
 
+/* Share the atmospheric canvas and glass surface values across components. */
+:root {
+  --color-canvas: #11152d;
+  --color-text: #f7f8ff;
+  --color-text-muted: #d3dcf7;
+  --gradient-canvas: linear-gradient(135deg, #123663, #27204e 60%, #381b58);
+  --glass-background: rgb(16 21 47 / 48%);
+  --glass-border: rgb(214 226 255 / 28%);
+  --glass-blur: 16px;
+  --glass-radius: 1rem;
+}
+
 /* Give semantic headings the display face throughout the dashboard. */
 @layer base {
   body {
     font-family: var(--font-sans);
+    /* Paint a full-height canvas beneath the transparent surfaces. */
+    min-height: 100dvh;
+    background: var(--color-canvas) var(--gradient-canvas);
+    color: var(--color-text);
   }
 
   h1,
