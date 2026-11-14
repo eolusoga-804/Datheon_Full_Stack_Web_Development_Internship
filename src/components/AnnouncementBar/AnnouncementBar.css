@@ -1,7 +1,5 @@
 /* Keep the announcement readable above the glass header. */
 .announcement-bar {
-  display: grid;
-  display: block;
   min-block-size: var(--announcement-height);
   margin: 0;
   padding: 0.3125rem 0.5rem;

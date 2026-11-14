@@ -30,6 +30,11 @@
 
 /* Give semantic headings the display face throughout the dashboard. */
 @layer base {
+  /* Keep the atmosphere above the body canvas and behind the dashboard. */
+  #root {
+    isolation: isolate;
+  }
+
   body {
     font-family: var(--font-sans);
     /* Paint a full-height canvas beneath the transparent surfaces. */

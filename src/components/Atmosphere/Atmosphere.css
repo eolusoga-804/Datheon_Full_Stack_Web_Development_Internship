@@ -1,0 +1,90 @@
+/* Keep the background fixed and clip the glow at viewport edges. */
+.atmosphere {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.atmosphere__orb {
+  position: absolute;
+  inset-block-start: var(--orb-top);
+  inset-inline-start: var(--orb-left);
+  inline-size: clamp(7rem, 27vmin, 19rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--orb-color) 0%, transparent 72%);
+  opacity: 0.68;
+  transform: translate(-50%, -50%);
+}
+
+/* Spread the colors across the viewport and vary the travel direction. */
+.atmosphere__orb--blue {
+  --orb-color: #3488ff;
+  --orb-top: 29%;
+  --orb-left: 21%;
+  --orb-x: 13vw;
+  --orb-y: 10vh;
+  --orb-duration: 3.8s;
+  --orb-delay: -1s;
+}
+
+.atmosphere__orb--violet {
+  --orb-color: #a447ff;
+  --orb-top: 25%;
+  --orb-left: 77%;
+  --orb-x: -14vw;
+  --orb-y: 13vh;
+  --orb-duration: 4.6s;
+  --orb-delay: -2s;
+}
+
+.atmosphere__orb--cyan {
+  --orb-color: #22d3ee;
+  --orb-top: 60%;
+  --orb-left: 14%;
+  --orb-x: 15vw;
+  --orb-y: -10vh;
+  --orb-duration: 4.2s;
+  --orb-delay: -0.5s;
+}
+
+.atmosphere__orb--pink {
+  --orb-color: #f451b5;
+  --orb-top: 61%;
+  --orb-left: 83%;
+  --orb-x: -13vw;
+  --orb-y: 14vh;
+  --orb-duration: 5s;
+  --orb-delay: -3s;
+}
+
+.atmosphere__orb--mint {
+  --orb-color: #34e6a5;
+  --orb-top: 85%;
+  --orb-left: 45%;
+  --orb-x: 16vw;
+  --orb-y: -11vh;
+  --orb-duration: 4.4s;
+  --orb-delay: -1.8s;
+}
+
+/* Animate position and scale when motion is enabled. */
+@media (prefers-reduced-motion: no-preference) {
+  .atmosphere__orb {
+    animation: atmosphere-drift var(--orb-duration) ease-in-out var(--orb-delay)
+      infinite alternate;
+  }
+}
+
+@keyframes atmosphere-drift {
+  from {
+    transform: translate(-50%, -50%) scale(0.85);
+  }
+
+  to {
+    transform: translate(calc(-50% + var(--orb-x)), calc(-50% + var(--orb-y)))
+      scale(1.25);
+  }
+}

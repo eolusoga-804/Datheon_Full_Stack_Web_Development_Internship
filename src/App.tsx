@@ -1,3 +1,4 @@
+import Atmosphere from "./components/Atmosphere/Atmosphere";
 import SiteHeader from "./components/SiteHeader/SiteHeader";
 import "./App.css";
 
@@ -5,6 +6,7 @@ import "./App.css";
 export default function App() {
   return (
     <>
+      <Atmosphere />
       <SiteHeader />
       <main className="dashboard">
         <div className="dashboard__intro">
