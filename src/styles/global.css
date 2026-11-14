@@ -17,6 +17,11 @@
   --glass-border: rgb(214 226 255 / 28%);
   --glass-blur: 16px;
   --glass-radius: 1rem;
+
+  /* Keep the fixed header and page content aligned at every width. */
+  --dashboard-width: 1140px;
+  --page-gutter: 0.75rem;
+  --site-header-height: 3.5rem;
 }
 
 /* Give semantic headings the display face throughout the dashboard. */
