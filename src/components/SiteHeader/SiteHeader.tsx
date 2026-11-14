@@ -1,9 +1,11 @@
+import AnnouncementBar from "../AnnouncementBar/AnnouncementBar";
 import "./SiteHeader.css";
 
 // Use the same brand mark in the header and browser tab.
 export default function SiteHeader() {
   return (
     <header className="site-header">
+      <AnnouncementBar />
       <div className="site-header__surface flex items-center gap-2">
         <img
           src="/favicon.svg"

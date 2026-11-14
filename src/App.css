@@ -1,9 +1,12 @@
-/* Reserve the fixed header's height and a gutter on each side of it. */
+/* Reserve space for the fixed announcement and header above the content. */
 .dashboard {
   max-inline-size: var(--dashboard-width);
   margin-inline: auto;
   padding-inline: var(--page-gutter);
-  padding-block-start: calc(var(--site-header-height) + 2 * var(--page-gutter));
+  padding-block-start: calc(
+    var(--announcement-height) + var(--site-header-gap) +
+      var(--site-header-height) + 2 * var(--page-gutter)
+  );
   padding-block-end: var(--page-gutter);
 }
 

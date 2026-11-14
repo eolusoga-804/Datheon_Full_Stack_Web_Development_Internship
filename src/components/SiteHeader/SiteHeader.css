@@ -6,6 +6,10 @@
   inset-inline: var(--page-gutter);
   max-inline-size: calc(var(--dashboard-width) - 2 * var(--page-gutter));
   margin-inline: auto;
+  /* Stack the announcement and glass surface within the fixed header. */
+  display: flex;
+  flex-direction: column;
+  gap: var(--site-header-gap);
 }
 
 .site-header__surface {
