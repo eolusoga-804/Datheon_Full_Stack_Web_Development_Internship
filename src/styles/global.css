@@ -1,2 +1,24 @@
 /* Load Tailwind utilities and the shared base reset. */
 @import "tailwindcss";
+
+/* Share the font stacks between base styles and Tailwind utilities. */
+@theme {
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "DynaPuff", ui-rounded, system-ui, sans-serif;
+}
+
+/* Give semantic headings the display face throughout the dashboard. */
+@layer base {
+  body {
+    font-family: var(--font-sans);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+  }
+}
