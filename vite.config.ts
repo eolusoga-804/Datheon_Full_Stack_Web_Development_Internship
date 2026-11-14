@@ -1,7 +1,8 @@
-import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import { defineConfig } from "vite";
 
-// https://vite.dev/config/
+// Compile Tailwind utilities alongside React during development and builds.
 export default defineConfig({
-  plugins: [react()],
-})
+  plugins: [react(), tailwindcss()],
+});
