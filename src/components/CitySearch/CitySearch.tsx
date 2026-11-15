@@ -4,6 +4,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { MIN_CITY_QUERY_LENGTH, searchCities } from "../../services/citySearch";
 import type { City } from "../../types/city";
+import { formatCity } from "../../utils/formatCity";
 import "./CitySearch.css";
 
 const SEARCH_DELAY_MS = 300;
@@ -12,14 +13,11 @@ type SearchResult =
   | { cities: City[]; error?: never }
   | { cities?: never; error: string };
 
-// Distinguish cities that share a name by including their region and country.
-function formatCity(city: City) {
-  return [
-    ...new Set([city.name, city.region, city.country].filter(Boolean)),
-  ].join(", ");
-}
+type CitySearchProps = {
+  onCitySelect: (city: City) => void;
+};
 
-export default function CitySearch() {
+export default function CitySearch({ onCitySelect }: CitySearchProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const usesCommand = /Mac|iPhone|iPad|iPod/i.test(navigator.platform);
   const shortcut = usesCommand ? "Meta+K" : "Control+K";
@@ -86,9 +84,11 @@ export default function CitySearch() {
     setResult(null);
   }
 
+  // Send the chosen location to the dashboard from every selection method.
   function selectCity(city: City) {
     setQuery(formatCity(city));
     closeSuggestions();
+    onCitySelect(city);
   }
 
   function handleSearchKey(event: ReactKeyboardEvent<HTMLInputElement>) {
