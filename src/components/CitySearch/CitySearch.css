@@ -1,0 +1,52 @@
+/* Keep the search field compact with a full-width touch target on mobile. */
+.city-search {
+  display: flex;
+  min-inline-size: 0;
+  min-block-size: 2.75rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding-inline: 0.75rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  background: rgb(12 18 45 / 55%);
+  color: var(--color-text-muted);
+}
+
+.city-search:focus-within {
+  outline: 2px solid #a8c5ff;
+  outline-offset: 2px;
+}
+
+.city-search__input {
+  flex: 1;
+  min-inline-size: 0;
+  align-self: stretch;
+  background: transparent;
+  color: var(--color-text);
+}
+
+.city-search__input:focus {
+  outline: none;
+}
+
+.city-search__input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.city-search__shortcut {
+  display: none;
+}
+
+/* Show the platform shortcut once there is room beside the brand. */
+@media (min-width: 48rem) {
+  .city-search {
+    inline-size: min(100%, 26rem);
+    margin-inline-start: auto;
+  }
+
+  .city-search__shortcut {
+    display: inline;
+    white-space: nowrap;
+    font-size: 0.75rem;
+  }
+}
