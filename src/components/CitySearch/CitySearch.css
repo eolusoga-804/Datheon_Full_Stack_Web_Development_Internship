@@ -1,5 +1,11 @@
-/* Keep the search field compact with a full-width touch target on mobile. */
+/* Anchor the dropdown to the field without changing the fixed header height. */
 .city-search {
+  position: relative;
+  min-inline-size: 0;
+}
+
+/* Keep the search field compact with a full-width touch target on mobile. */
+.city-search__field {
   display: flex;
   min-inline-size: 0;
   min-block-size: 2.75rem;
@@ -12,7 +18,7 @@
   color: var(--color-text-muted);
 }
 
-.city-search:focus-within {
+.city-search__field:focus-within {
   outline: 2px solid #a8c5ff;
   outline-offset: 2px;
 }
@@ -35,6 +41,41 @@
 
 .city-search__shortcut {
   display: none;
+}
+
+/* Keep long results readable and the dropdown usable on short screens. */
+.city-search__popup {
+  position: absolute;
+  z-index: 1;
+  inset-inline: 0;
+  inset-block-start: calc(100% + 0.375rem);
+  max-block-size: min(16rem, 45dvh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--glass-border);
+  border-radius: 0.875rem;
+  background: #182140;
+  color: var(--color-text);
+  box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 32%);
+}
+
+.city-search__option {
+  display: flex;
+  min-block-size: 2.75rem;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.city-search__option:hover,
+.city-search__option[aria-selected="true"] {
+  background: #344782;
+}
+
+.city-search__message {
+  padding: 0.625rem 0.75rem;
+  color: var(--color-text-muted);
 }
 
 /* Show the platform shortcut once there is room beside the brand. */
