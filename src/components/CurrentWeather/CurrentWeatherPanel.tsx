@@ -5,6 +5,7 @@ import { getCurrentWeather } from "../../services/currentWeather";
 import type { City } from "../../types/city";
 import type { CurrentWeather } from "../../types/weather";
 import { formatCity } from "../../utils/formatCity";
+import WeatherIcon from "../WeatherIcon/WeatherIcon";
 
 type WeatherResult =
   | { status: "loading" }
@@ -72,14 +73,38 @@ export default function CurrentWeatherPanel({ city }: { city: City }) {
         {result.status === "error" && <p>{result.message}</p>}
 
         {result.status === "ready" && (
-          <>
-            <p className="text-3xl font-semibold tabular-nums">
-              {Math.round(result.weather.temperatureC)} °C
-            </p>
-            <p className="capitalize">{result.weather.description}</p>
-          </>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            {/* The visible condition text supplies the meaning of the icon. */}
+            <WeatherIcon
+              conditionCode={result.weather.conditionCode}
+              providerIconCode={result.weather.providerIconCode}
+              className="shrink-0 text-4xl text-sky-200"
+            />
+
+            <div className="min-w-0">
+              <p className="text-3xl font-semibold tabular-nums">
+                {Math.round(result.weather.temperatureC)} °C
+              </p>
+              <p className="capitalize">{result.weather.description}</p>
+
+              {result.weather.feelsLikeC !== undefined && (
+                <p className="dashboard__description">
+                  Feels like {Math.round(result.weather.feelsLikeC)} °C
+                </p>
+              )}
+            </div>
+          </div>
         )}
       </div>
+
+      {result.status === "ready" && (
+        <a
+          href="https://openweathermap.org/"
+          className="dashboard__description self-start text-xs underline underline-offset-2"
+        >
+          Weather data provided by OpenWeather
+        </a>
+      )}
 
       {result.status === "error" && (
         <button
