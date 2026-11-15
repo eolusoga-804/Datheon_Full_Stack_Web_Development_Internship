@@ -1,6 +1,7 @@
 import Atmosphere from "./components/Atmosphere/Atmosphere";
 import SiteHeader from "./components/SiteHeader/SiteHeader";
-import { Fragment, useState } from "react";
+import { Fragment, useRef, useState } from "react";
+import { getBrowserLocation } from "./services/browserLocation";
 import type { City } from "./types/city";
 import CurrentWeatherPanel from "./components/CurrentWeather/CurrentWeatherPanel";
 import ForecastPanel from "./components/Forecast/ForecastPanel";
@@ -10,11 +11,56 @@ import "./App.css";
 export default function App() {
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
 
+  const locationRequest = useRef(0);
+  const [isLocating, setIsLocating] = useState(false);
+  const [locationMessage, setLocationMessage] = useState("");
+
+  function selectCity(city: City) {
+    // Invalidate a pending location result when the user selects a city.
+    locationRequest.current += 1;
+    setIsLocating(false);
+    setLocationMessage("");
+    setSelectedCity(city);
+  }
+
+  async function useCurrentLocation() {
+    const requestId = ++locationRequest.current;
+    setIsLocating(true);
+    setLocationMessage("Finding your location…");
+
+    try {
+      const coordinates = await getBrowserLocation();
+      if (requestId !== locationRequest.current) return;
+
+      // Keep the rounded coordinates in the current dashboard session.
+      setSelectedCity({
+        id: -1,
+        name: "Current location",
+        ...coordinates,
+      });
+      setLocationMessage("");
+    } catch (error) {
+      if (requestId !== locationRequest.current) return;
+
+      setLocationMessage(
+        error instanceof Error
+          ? error.message
+          : "Could not find your location.",
+      );
+    } finally {
+      if (requestId === locationRequest.current) setIsLocating(false);
+    }
+  }
+
   return (
     <>
       <Atmosphere />
 
-      <SiteHeader onCitySelect={setSelectedCity} />
+      <SiteHeader
+        onCitySelect={selectCity}
+        onUseLocation={useCurrentLocation}
+        isLocating={isLocating}
+      />
 
       <main className="dashboard">
         {/* Keep weather first in both reading and visual order. */}
@@ -22,8 +68,20 @@ export default function App() {
           <h2 id="weather-heading" className="text-lg font-semibold">
             Weather
           </h2>
+
+          <p
+            role="status"
+            className={
+              locationMessage ? "dashboard__description text-sm" : "sr-only"
+            }
+          >
+            {locationMessage}
+          </p>
+
           {selectedCity ? (
-            <Fragment key={selectedCity.id}>
+            <Fragment
+              key={`${selectedCity.id}:${selectedCity.latitude}:${selectedCity.longitude}`}
+            >
               <CurrentWeatherPanel city={selectedCity} />
               <ForecastPanel city={selectedCity} />
             </Fragment>

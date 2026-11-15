@@ -21,7 +21,7 @@
   /* Keep the fixed header and page content aligned at every width. */
   --dashboard-width: 1140px;
   --page-gutter: 0.75rem;
-  --site-header-height: 6.75rem;
+  --site-header-height: 7rem;
 
   /* Share the fixed header stack dimensions with the dashboard. */
   --announcement-height: 2rem;
@@ -31,7 +31,7 @@
 /* Restore the single-row height when branding and search fit side by side. */
 @media (min-width: 48rem) {
   :root {
-    --site-header-height: 3.5rem;
+    --site-header-height: 3.625rem;
   }
 }
 
