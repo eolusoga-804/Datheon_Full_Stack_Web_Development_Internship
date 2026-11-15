@@ -7,6 +7,7 @@ import type { CurrentWeather } from "../../types/weather";
 import { formatCity } from "../../utils/formatCity";
 import WeatherIcon from "../WeatherIcon/WeatherIcon";
 import WeatherTimes from "./WeatherTimes";
+import WeatherTelemetry from "../WeatherTelemetry/WeatherTelemetry";
 
 type WeatherResult =
   | { status: "loading" }
@@ -105,6 +106,10 @@ export default function CurrentWeatherPanel({ city }: { city: City }) {
           calculatedAtUnix={result.weather.calculatedAtUnix}
           utcOffsetSeconds={result.weather.utcOffsetSeconds}
         />
+      )}
+
+      {result.status === "ready" && (
+        <WeatherTelemetry weather={result.weather} />
       )}
 
       {result.status === "ready" && (
