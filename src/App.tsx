@@ -2,7 +2,7 @@ import Atmosphere from "./components/Atmosphere/Atmosphere";
 import SiteHeader from "./components/SiteHeader/SiteHeader";
 import { useState } from "react";
 import type { City } from "./types/city";
-import { formatCity } from "./utils/formatCity";
+import CurrentWeatherPanel from "./components/CurrentWeather/CurrentWeatherPanel";
 import "./App.css";
 
 // Mount shared branding above the main weather content.
@@ -21,11 +21,13 @@ export default function App() {
           <h2 id="weather-heading" className="text-lg font-semibold">
             Weather
           </h2>
-          <p className="dashboard__description text-sm" role="status">
-            {selectedCity
-              ? formatCity(selectedCity)
-              : "Search for a city to get started."}
-          </p>
+          {selectedCity ? (
+            <CurrentWeatherPanel key={selectedCity.id} city={selectedCity} />
+          ) : (
+            <p className="dashboard__description text-sm">
+              Search for a city to get started.
+            </p>
+          )}
         </section>
 
         <aside className="dashboard__panel" aria-labelledby="articles-heading">
