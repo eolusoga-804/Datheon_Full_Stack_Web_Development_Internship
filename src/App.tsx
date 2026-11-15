@@ -1,8 +1,9 @@
 import Atmosphere from "./components/Atmosphere/Atmosphere";
 import SiteHeader from "./components/SiteHeader/SiteHeader";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import type { City } from "./types/city";
 import CurrentWeatherPanel from "./components/CurrentWeather/CurrentWeatherPanel";
+import ForecastPanel from "./components/Forecast/ForecastPanel";
 import "./App.css";
 
 // Mount shared branding above the main weather content.
@@ -22,7 +23,10 @@ export default function App() {
             Weather
           </h2>
           {selectedCity ? (
-            <CurrentWeatherPanel key={selectedCity.id} city={selectedCity} />
+            <Fragment key={selectedCity.id}>
+              <CurrentWeatherPanel city={selectedCity} />
+              <ForecastPanel city={selectedCity} />
+            </Fragment>
           ) : (
             <p className="dashboard__description text-sm">
               Search for a city to get started.

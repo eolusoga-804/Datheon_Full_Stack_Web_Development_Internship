@@ -2,7 +2,7 @@ import type { Forecast } from "../types/weather";
 import { createCityTimeFormatter } from "../utils/createCityTimeFormatter.ts";
 import { asRecord, readNumber, readText } from "./readWeatherPayload.ts";
 
-const FORECAST_DAY_COUNT = 5;
+export const FORECAST_DAY_COUNT = 5;
 
 type ForecastSample = {
   timeMs: number;
