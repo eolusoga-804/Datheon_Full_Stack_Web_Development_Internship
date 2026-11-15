@@ -1,9 +1,7 @@
 import type { City } from "../types/city";
 import type { CurrentWeather } from "../types/weather";
 import { asRecord, readNumber, readText } from "./readWeatherPayload.ts";
-
-const CURRENT_WEATHER_ROUTE = "/api/current-weather";
-const REQUEST_TIMEOUT_MS = 10_000;
+import { requestWeather } from "./requestWeather.ts";
 
 // Require enough data for the weather summary and read telemetry independently.
 function normalizeCurrentWeather(payload: unknown): CurrentWeather {
@@ -55,58 +53,12 @@ export async function getCurrentWeather(
   city: Pick<City, "latitude" | "longitude">,
   signal?: AbortSignal,
 ): Promise<CurrentWeather> {
-  const query = new URLSearchParams({
-    lat: String(city.latitude),
-    lon: String(city.longitude),
-  });
-  const timeout = AbortSignal.timeout(REQUEST_TIMEOUT_MS);
-  const requestSignal = signal ? AbortSignal.any([signal, timeout]) : timeout;
+  const payload = await requestWeather(
+    "/api/current-weather",
+    city,
+    "Current weather is temporarily unavailable. Try again.",
+    signal,
+  );
 
-  try {
-    // Send the coordinates to the app's server route.
-    const response = await fetch(`${CURRENT_WEATHER_ROUTE}?${query}`, {
-      signal: requestSignal,
-      headers: { Accept: "application/json" },
-    });
-
-    if (!response.ok) {
-      const contentType = response.headers.get("content-type") ?? "";
-      const errorBody: unknown = contentType.includes("application/json")
-        ? await response.json()
-        : undefined;
-
-      throw new Error(
-        readText(asRecord(errorBody)?.message) ??
-          "Current weather is temporarily unavailable. Try again.",
-      );
-    }
-
-    const payload: unknown = await response.json();
-    return normalizeCurrentWeather(payload);
-  } catch (error) {
-    if (signal?.aborted) throw signal.reason;
-
-    if (timeout.aborted) {
-      throw new Error("The weather request timed out. Try again.", {
-        cause: error,
-      });
-    }
-
-    if (error instanceof SyntaxError) {
-      throw new Error("The weather service returned an unexpected response.", {
-        cause: error,
-      });
-    }
-
-    if (error instanceof TypeError) {
-      throw new Error(
-        "Could not reach the weather service. Check your connection.",
-        {
-          cause: error,
-        },
-      );
-    }
-
-    throw error;
-  }
+  return normalizeCurrentWeather(payload);
 }
