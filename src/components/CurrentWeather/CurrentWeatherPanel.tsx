@@ -109,7 +109,7 @@ export default function CurrentWeatherPanel({ city }: { city: City }) {
       )}
 
       {result.status === "ready" && (
-        <WeatherTelemetry weather={result.weather} />
+        <WeatherTelemetry weather={result.weather} timezone={city.timezone} />
       )}
 
       {result.status === "ready" && (

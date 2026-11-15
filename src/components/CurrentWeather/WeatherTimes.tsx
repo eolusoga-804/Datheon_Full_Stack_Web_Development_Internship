@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { City } from "../../types/city";
 import type { CurrentWeather } from "../../types/weather";
+import { createCityTimeFormatter } from "../../utils/createCityTimeFormatter";
 
 type WeatherTimesProps = {
   timezone: City["timezone"];
@@ -9,41 +10,6 @@ type WeatherTimesProps = {
 };
 
 const CLOCK_REFRESH_MS = 10_000;
-
-// Prefer the city's named zone so daylight-saving rules apply automatically.
-function getCityClock(timezone?: string, utcOffsetSeconds?: number) {
-  const options = {
-    dateStyle: "medium",
-    timeStyle: "short",
-  } satisfies Intl.DateTimeFormatOptions;
-
-  if (timezone) {
-    try {
-      const formatter = new Intl.DateTimeFormat(undefined, {
-        ...options,
-        timeZone: timezone,
-      });
-
-      return { format: formatter.format, usesLocalTime: true };
-    } catch (error) {
-      if (!(error instanceof RangeError)) throw error;
-    }
-  }
-
-  // Use the provider's offset when a named zone is missing or unsupported.
-  const formatter = new Intl.DateTimeFormat(undefined, {
-    ...options,
-    timeZone: "UTC",
-  });
-  const usesLocalTime =
-    utcOffsetSeconds !== undefined && Math.abs(utcOffsetSeconds) <= 86_400;
-  const offsetMs = usesLocalTime ? utcOffsetSeconds * 1_000 : 0;
-
-  return {
-    format: (date: Date) => formatter.format(date.getTime() + offsetMs),
-    usesLocalTime,
-  };
-}
 
 export default function WeatherTimes({
   timezone,
@@ -62,7 +28,10 @@ export default function WeatherTimes({
     return () => window.clearInterval(timer);
   }, []);
 
-  const clock = getCityClock(timezone, utcOffsetSeconds);
+  const clock = createCityTimeFormatter(timezone, utcOffsetSeconds, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
   const calculatedAt = new Date(calculatedAtUnix * 1_000);
   const hasValidTimestamp = Number.isFinite(calculatedAt.getTime());
 
