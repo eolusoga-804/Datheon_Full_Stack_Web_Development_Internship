@@ -18,3 +18,19 @@ export type CurrentWeather = {
   rainLastHourMm?: number;
   snowLastHourMm?: number;
 };
+
+// Describe a range calculated from the available samples for one date.
+export type ForecastDay = {
+  dateKey: string;
+  dateLabel: string;
+  lowC: number;
+  highC: number;
+  conditionCode: number;
+  description: string;
+  providerIconCode?: string;
+};
+
+export type Forecast = {
+  days: ForecastDay[];
+  usesLocalTime: boolean;
+};

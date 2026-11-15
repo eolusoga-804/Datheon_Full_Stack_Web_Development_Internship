@@ -1,26 +1,9 @@
 import type { City } from "../types/city";
 import type { CurrentWeather } from "../types/weather";
+import { asRecord, readNumber, readText } from "./readWeatherPayload.ts";
 
 const CURRENT_WEATHER_ROUTE = "/api/current-weather";
 const REQUEST_TIMEOUT_MS = 10_000;
-
-function asRecord(value: unknown): Record<string, unknown> | undefined {
-  if (typeof value === "object" && value !== null && !Array.isArray(value)) {
-    return value as Record<string, unknown>;
-  }
-
-  return undefined;
-}
-
-function readNumber(value: unknown): number | undefined {
-  return typeof value === "number" && Number.isFinite(value)
-    ? value
-    : undefined;
-}
-
-function readText(value: unknown): string | undefined {
-  return typeof value === "string" ? value.trim() || undefined : undefined;
-}
 
 // Require enough data for the weather summary and read telemetry independently.
 function normalizeCurrentWeather(payload: unknown): CurrentWeather {
