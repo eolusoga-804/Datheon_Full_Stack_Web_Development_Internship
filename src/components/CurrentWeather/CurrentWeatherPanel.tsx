@@ -6,6 +6,7 @@ import type { City } from "../../types/city";
 import type { CurrentWeather } from "../../types/weather";
 import { formatCity } from "../../utils/formatCity";
 import WeatherIcon from "../WeatherIcon/WeatherIcon";
+import WeatherTimes from "./WeatherTimes";
 
 type WeatherResult =
   | { status: "loading" }
@@ -96,6 +97,15 @@ export default function CurrentWeatherPanel({ city }: { city: City }) {
           </div>
         )}
       </div>
+
+      {/* Keep the ticking clock outside the live announcement region. */}
+      {result.status === "ready" && (
+        <WeatherTimes
+          timezone={city.timezone}
+          calculatedAtUnix={result.weather.calculatedAtUnix}
+          utcOffsetSeconds={result.weather.utcOffsetSeconds}
+        />
+      )}
 
       {result.status === "ready" && (
         <a
