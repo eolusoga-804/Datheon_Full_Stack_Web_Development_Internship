@@ -1,0 +1,44 @@
+/* Keep the invitation in the panel without covering the search controls. */
+.install-invitation {
+  display: flex;
+  flex: 1 0 100%;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 0.5rem;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
+  background: var(--glass-background);
+}
+
+.install-invitation__install {
+  min-block-size: 2.75rem;
+  padding-inline: 0.875rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  background: #1a2352 linear-gradient(120deg, #2069ff, #8d2ae6, #2069ff);
+  background-size: 220% 100%;
+  color: var(--color-text);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.install-invitation__install:focus-visible {
+  outline: 2px solid #a8c5ff;
+  outline-offset: 2px;
+}
+
+/* Keep the gradient static when the device requests reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .install-invitation__install:enabled {
+    animation: install-gradient 1.8s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes install-gradient {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
+}

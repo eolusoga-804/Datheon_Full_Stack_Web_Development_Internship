@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import InstallInvitation from "../InstallInvitation/InstallInvitation";
 import "./Personalization.css";
 
 const NAME_STORAGE_KEY = "myforecast:preferred-name";
@@ -130,6 +131,8 @@ export default function Personalization() {
           </div>
         </form>
       </dialog>
+
+      <InstallInvitation paused={isOpen} />
     </div>
   );
 }
