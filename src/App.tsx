@@ -6,6 +6,7 @@ import type { City } from "./types/city";
 import CurrentWeatherPanel from "./components/CurrentWeather/CurrentWeatherPanel";
 import ForecastPanel from "./components/Forecast/ForecastPanel";
 import FavoritesPanel from "./components/Favorites/FavoritesPanel";
+import LocalArticles from "./components/LocalArticles/LocalArticles";
 import "./App.css";
 
 // Mount shared branding above the main weather content.
@@ -102,9 +103,13 @@ export default function App() {
           <h2 id="articles-heading" className="text-lg font-medium">
             Local articles
           </h2>
-          <p className="dashboard__description text-sm">
-            Choose a city to explore local articles.
-          </p>
+          {selectedCity && selectedCity.id > 0 ? (
+            <LocalArticles key={selectedCity.id} cityName={selectedCity.name} />
+          ) : (
+            <p className="dashboard__description text-sm">
+              Choose a city to explore local weather articles.
+            </p>
+          )}
         </aside>
       </main>
     </>

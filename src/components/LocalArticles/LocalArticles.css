@@ -1,0 +1,29 @@
+/* Keep headlines readable in the narrow sidebar and on mobile. */
+.local-articles,
+.local-articles__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.local-articles__item {
+  padding-block-start: 0.375rem;
+  border-block-start: 1px solid var(--glass-border);
+}
+
+.local-articles__link {
+  display: flex;
+  min-block-size: 2.75rem;
+  align-items: center;
+  color: var(--color-text);
+  font-size: 0.875rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.local-articles__link:focus-visible {
+  outline: 2px solid #a8c5ff;
+  outline-offset: 2px;
+}
