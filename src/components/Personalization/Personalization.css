@@ -1,0 +1,82 @@
+/* Fit the greeting and edit action into the weather panel. */
+.personalization {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.5rem;
+  overflow-wrap: anywhere;
+}
+
+.personalization__dialog {
+  inline-size: min(25rem, calc(100% - 1.5rem));
+  margin: auto;
+  padding: 0.875rem;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
+  background: rgb(24 31 66 / 89%);
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: 0 1rem 3rem rgb(0 0 0 / 35%);
+  color: var(--color-text);
+}
+
+.personalization__dialog::backdrop {
+  background: rgb(7 10 27 / 58%);
+}
+
+.personalization__input,
+.personalization__primary,
+.personalization__secondary {
+  min-block-size: 2.75rem;
+  padding-inline: 0.75rem;
+  border: 1px solid var(--glass-border);
+  color: var(--color-text);
+}
+
+.personalization__input {
+  min-inline-size: 0;
+  border-radius: 0.75rem;
+  background: rgb(7 13 39 / 55%);
+}
+
+.personalization__primary,
+.personalization__secondary {
+  border-radius: 999px;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.personalization__secondary {
+  background: var(--glass-background);
+}
+
+.personalization__primary {
+  background: #1a2352 linear-gradient(120deg, #2069ff, #8d2ae6, #2069ff);
+  background-size: 220% 100%;
+  font-weight: 600;
+}
+
+.personalization__primary:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.personalization :focus-visible {
+  outline: 2px solid #a8c5ff;
+  outline-offset: 2px;
+}
+
+/* Animate the save action only when motion is enabled. */
+@media (prefers-reduced-motion: no-preference) {
+  .personalization__primary:enabled {
+    animation: personalization-gradient 1.8s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes personalization-gradient {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
+}

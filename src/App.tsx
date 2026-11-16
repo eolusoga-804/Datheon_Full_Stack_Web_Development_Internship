@@ -7,6 +7,7 @@ import CurrentWeatherPanel from "./components/CurrentWeather/CurrentWeatherPanel
 import ForecastPanel from "./components/Forecast/ForecastPanel";
 import FavoritesPanel from "./components/Favorites/FavoritesPanel";
 import LocalArticles from "./components/LocalArticles/LocalArticles";
+import Personalization from "./components/Personalization/Personalization";
 import "./App.css";
 
 // Mount shared branding above the main weather content.
@@ -92,6 +93,8 @@ export default function App() {
               Search for a city to get started.
             </p>
           )}
+
+          <Personalization />
 
           <FavoritesPanel
             selectedCity={selectedCity}
