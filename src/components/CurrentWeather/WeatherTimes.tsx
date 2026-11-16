@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import type { City } from "../../types/city";
 import type { CurrentWeather } from "../../types/weather";
 import { createCityTimeFormatter } from "../../utils/createCityTimeFormatter";
-import { getWeatherTheme } from "../../utils/getWeatherTheme";
+import {
+  getWeatherCondition,
+  getWeatherTheme,
+} from "../../utils/getWeatherTheme";
 
 type WeatherTimesProps = {
   timezone: City["timezone"];
@@ -35,6 +38,7 @@ export default function WeatherTimes({ timezone, weather }: WeatherTimesProps) {
     <dl
       className="dashboard__description flex flex-wrap gap-x-4 gap-y-1 text-xs"
       data-weather-theme={getWeatherTheme(weather, timezone, now)}
+      data-weather-condition={getWeatherCondition(weather.conditionCode)}
     >
       <div>
         <dt className="font-semibold">

@@ -3,6 +3,15 @@ import { createCityTimeFormatter } from "./createCityTimeFormatter.ts";
 
 export type WeatherTheme = "sunny" | "cloudy" | "rainy" | "night";
 
+// Keep the weather condition separate from the city’s daylight state.
+export function getWeatherCondition(conditionCode: number) {
+  const group = Math.floor(conditionCode / 100);
+
+  if (group === 2 || group === 3 || group === 5) return "rainy";
+  if (conditionCode === 800 || conditionCode === 801) return "sunny";
+  return "cloudy";
+}
+
 export function getWeatherTheme(
   weather: CurrentWeather,
   timezone: string | undefined,
@@ -33,10 +42,5 @@ export function getWeatherTheme(
     }
   }
 
-  if (isNight) return "night";
-
-  const group = Math.floor(conditionCode / 100);
-  if (group === 2 || group === 3 || group === 5) return "rainy";
-
-  return conditionCode === 800 || conditionCode === 801 ? "sunny" : "cloudy";
+  return isNight ? "night" : getWeatherCondition(conditionCode);
 }
