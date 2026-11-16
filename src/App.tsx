@@ -58,6 +58,10 @@ export default function App() {
 
   return (
     <>
+      <a className="dashboard-skip-link" href="#weather-dashboard">
+        Skip to weather dashboard
+      </a>
+
       <Atmosphere />
 
       <SiteHeader
@@ -66,7 +70,7 @@ export default function App() {
         isLocating={isLocating}
       />
 
-      <main className="dashboard">
+      <main id="weather-dashboard" className="dashboard" tabIndex={-1}>
         {/* Keep weather first in both reading and visual order. */}
         <section className="dashboard__panel" aria-labelledby="weather-heading">
           <h2 id="weather-heading" className="text-lg font-semibold">
@@ -118,6 +122,10 @@ export default function App() {
           )}
         </aside>
       </main>
+
+      <footer className="dashboard-footer">
+        <p>Developed by Emmanuel#804</p>
+      </footer>
     </>
   );
 }

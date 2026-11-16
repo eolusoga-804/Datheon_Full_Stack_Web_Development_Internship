@@ -47,3 +47,37 @@
     flex: 0 0 18rem;
   }
 }
+
+/* Reveal the skip link above the fixed header when it receives focus. */
+.dashboard-skip-link {
+  position: fixed;
+  z-index: 20;
+  inset-block-start: var(--page-gutter);
+  inset-inline-start: var(--page-gutter);
+  display: inline-flex;
+  min-block-size: 2.75rem;
+  align-items: center;
+  padding-inline: 0.875rem;
+  transform: translateY(-150%);
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  background: #202b57;
+  color: var(--color-text);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.dashboard-skip-link:focus {
+  transform: none;
+  outline: 2px solid #a8c5ff;
+  outline-offset: 2px;
+}
+
+/* Match the footer’s width and gutters to the dashboard. */
+.dashboard-footer {
+  max-inline-size: var(--dashboard-width);
+  margin-inline: auto;
+  padding: 0.25rem var(--page-gutter) var(--page-gutter);
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+}
