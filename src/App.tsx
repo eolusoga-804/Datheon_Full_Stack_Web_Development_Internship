@@ -8,6 +8,7 @@ import ForecastPanel from "./components/Forecast/ForecastPanel";
 import FavoritesPanel from "./components/Favorites/FavoritesPanel";
 import LocalArticles from "./components/LocalArticles/LocalArticles";
 import Personalization from "./components/Personalization/Personalization";
+import LoadingState from "./components/LoadingState/LoadingState";
 import "./App.css";
 
 // Mount shared branding above the main weather content.
@@ -72,14 +73,18 @@ export default function App() {
             Weather
           </h2>
 
-          <p
+          <div
             role="status"
             className={
               locationMessage ? "dashboard__description text-sm" : "sr-only"
             }
           >
-            {locationMessage}
-          </p>
+            {isLocating ? (
+              <LoadingState message={locationMessage} />
+            ) : (
+              locationMessage
+            )}
+          </div>
 
           {selectedCity ? (
             <Fragment

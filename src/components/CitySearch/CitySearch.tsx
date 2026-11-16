@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { MIN_CITY_QUERY_LENGTH, searchCities } from "../../services/citySearch";
 import type { City } from "../../types/city";
 import { formatCity } from "../../utils/formatCity";
+import LoadingState from "../LoadingState/LoadingState";
 import "./CitySearch.css";
 
 const SEARCH_DELAY_MS = 300;
@@ -32,10 +33,12 @@ export default function CitySearch({ onCitySelect }: CitySearchProps) {
   const cities = result?.cities ?? [];
   const showList = canSearch && cities.length > 0;
 
+  const isSearching = canSearch && !result;
+
   const status = !isOpen
     ? ""
     : (result?.error ??
-      (canSearch && !result
+      (isSearching
         ? "Searching for cities…"
         : canSearch && cities.length === 0
           ? "No cities found. Try a different name."
@@ -190,13 +193,19 @@ export default function CitySearch({ onCitySelect }: CitySearchProps) {
           (showList ? `${cities.length} city suggestions available.` : "")}
       </p>
 
-      {status && (
-        <p
-          className="city-search__popup city-search__message"
-          aria-hidden="true"
-        >
-          {status}
-        </p>
+      {isSearching ? (
+        <div className="city-search__popup" aria-hidden="true">
+          <LoadingState message={status} />
+        </div>
+      ) : (
+        status && (
+          <p
+            className="city-search__popup city-search__message"
+            aria-hidden="true"
+          >
+            {status}
+          </p>
+        )
       )}
 
       {showList && (
