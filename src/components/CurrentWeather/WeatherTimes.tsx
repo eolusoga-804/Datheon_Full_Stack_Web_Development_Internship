@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import type { City } from "../../types/city";
-import type { CurrentWeather } from "../../types/weather";
-import { createCityTimeFormatter } from "../../utils/createCityTimeFormatter";
+import type { CurrentWeather, Forecast } from "../../types/weather";
+import {
+  createCityTimeFormatter,
+  createCityDateFormatter,
+} from "../../utils/createCityTimeFormatter";
 import {
   getWeatherCondition,
   getWeatherTheme,
@@ -10,11 +13,16 @@ import {
 type WeatherTimesProps = {
   timezone: City["timezone"];
   weather: CurrentWeather;
+  forecast: Forecast | null;
 };
 
 const CLOCK_REFRESH_MS = 10_000;
 
-export default function WeatherTimes({ timezone, weather }: WeatherTimesProps) {
+export default function WeatherTimes({
+  timezone,
+  weather,
+  forecast,
+}: WeatherTimesProps) {
   const [now, setNow] = useState(() => new Date());
 
   // Update the clock independently of weather requests.
@@ -33,6 +41,14 @@ export default function WeatherTimes({ timezone, weather }: WeatherTimesProps) {
   });
   const calculatedAt = new Date(weather.calculatedAtUnix * 1_000);
   const hasValidTimestamp = Number.isFinite(calculatedAt.getTime());
+
+  // Reuse the ticking city clock so yesterday's range clears at local midnight.
+  const todayKey = forecast?.usesLocalTime
+    ? createCityDateFormatter(timezone, forecast.utcOffsetSeconds).format(now)
+    : undefined;
+  const today = todayKey
+    ? forecast?.days.find((day) => day.dateKey === todayKey)
+    : undefined;
 
   return (
     <dl
@@ -65,6 +81,15 @@ export default function WeatherTimes({ timezone, weather }: WeatherTimesProps) {
           )}
         </dd>
       </div>
+
+      {today && (
+        <div>
+          <dt className="font-semibold">Today’s forecast range</dt>
+          <dd>
+            Low {Math.round(today.lowC)} °C · High {Math.round(today.highC)} °C
+          </dd>
+        </div>
+      )}
     </dl>
   );
 }

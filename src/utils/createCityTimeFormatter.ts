@@ -33,3 +33,15 @@ export function createCityTimeFormatter(
     usesLocalTime,
   };
 }
+
+// Use the same calendar-date format for forecast grouping and lookup.
+export function createCityDateFormatter(
+  timezone: string | undefined,
+  utcOffsetSeconds: number | undefined,
+) {
+  return createCityTimeFormatter(timezone, utcOffsetSeconds, {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  });
+}

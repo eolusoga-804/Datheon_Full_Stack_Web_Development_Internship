@@ -1,14 +1,14 @@
 import Atmosphere from "./components/Atmosphere/Atmosphere";
 import SiteHeader from "./components/SiteHeader/SiteHeader";
-import { Fragment, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { getBrowserLocation } from "./services/browserLocation";
 import type { City } from "./types/city";
-import CurrentWeatherPanel from "./components/CurrentWeather/CurrentWeatherPanel";
-import ForecastPanel from "./components/Forecast/ForecastPanel";
+
 import FavoritesPanel from "./components/Favorites/FavoritesPanel";
 import LocalArticles from "./components/LocalArticles/LocalArticles";
 import Personalization from "./components/Personalization/Personalization";
 import LoadingState from "./components/LoadingState/LoadingState";
+import CityWeather from "./components/CityWeather/CityWeather";
 import "./App.css";
 
 // Mount shared branding above the main weather content.
@@ -87,12 +87,10 @@ export default function App() {
           </div>
 
           {selectedCity ? (
-            <Fragment
+            <CityWeather
               key={`${selectedCity.id}:${selectedCity.latitude}:${selectedCity.longitude}`}
-            >
-              <CurrentWeatherPanel city={selectedCity} />
-              <ForecastPanel city={selectedCity} />
-            </Fragment>
+              city={selectedCity}
+            />
           ) : (
             <p className="dashboard__description text-sm">
               Search for a city to get started.

@@ -33,4 +33,5 @@ export type ForecastDay = {
 export type Forecast = {
   days: ForecastDay[];
   usesLocalTime: boolean;
+  utcOffsetSeconds?: number;
 };

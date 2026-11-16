@@ -18,7 +18,13 @@ const degrees = new Intl.NumberFormat(undefined, {
   maximumFractionDigits: 0,
 });
 
-export default function ForecastPanel({ city }: { city: City }) {
+export default function ForecastPanel({
+  city,
+  onForecastReady,
+}: {
+  city: City;
+  onForecastReady: (forecast: Forecast) => void;
+}) {
   const [result, setResult] = useState<ForecastResult>({ status: "loading" });
   const [attempt, setAttempt] = useState(0);
   const { latitude, longitude, timezone } = city;
@@ -36,6 +42,7 @@ export default function ForecastPanel({ city }: { city: City }) {
 
         if (!controller.signal.aborted) {
           setResult({ status: "ready", forecast });
+          onForecastReady(forecast);
         }
       } catch (error) {
         if (!controller.signal.aborted) {
@@ -52,7 +59,7 @@ export default function ForecastPanel({ city }: { city: City }) {
 
     void loadForecast();
     return () => controller.abort();
-  }, [latitude, longitude, timezone, attempt]);
+  }, [latitude, longitude, timezone, attempt, onForecastReady]);
 
   function retryForecast() {
     setResult({ status: "loading" });

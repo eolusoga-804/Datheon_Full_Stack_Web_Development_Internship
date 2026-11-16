@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getCurrentWeather } from "../../services/currentWeather";
 import type { City } from "../../types/city";
-import type { CurrentWeather } from "../../types/weather";
+import type { CurrentWeather, Forecast } from "../../types/weather";
 import { formatCity } from "../../utils/formatCity";
 import WeatherIcon from "../WeatherIcon/WeatherIcon";
 import WeatherTimes from "./WeatherTimes";
@@ -13,7 +13,13 @@ type WeatherResult =
   | { status: "ready"; weather: CurrentWeather }
   | { status: "error"; message: string };
 
-export default function CurrentWeatherPanel({ city }: { city: City }) {
+export default function CurrentWeatherPanel({
+  city,
+  forecast,
+}: {
+  city: City;
+  forecast: Forecast | null;
+}) {
   const [result, setResult] = useState<WeatherResult>({ status: "loading" });
   const [attempt, setAttempt] = useState(0);
   const { latitude, longitude } = city;
@@ -95,7 +101,11 @@ export default function CurrentWeatherPanel({ city }: { city: City }) {
 
       {/* Keep the ticking clock outside the live announcement region. */}
       {result.status === "ready" && (
-        <WeatherTimes timezone={city.timezone} weather={result.weather} />
+        <WeatherTimes
+          timezone={city.timezone}
+          weather={result.weather}
+          forecast={forecast}
+        />
       )}
 
       {result.status === "ready" && (

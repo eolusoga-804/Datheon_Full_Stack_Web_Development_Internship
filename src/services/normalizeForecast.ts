@@ -1,5 +1,8 @@
 import type { Forecast } from "../types/weather";
-import { createCityTimeFormatter } from "../utils/createCityTimeFormatter.ts";
+import {
+  createCityDateFormatter,
+  createCityTimeFormatter,
+} from "../utils/createCityTimeFormatter.ts";
 import { asRecord, readNumber, readText } from "./readWeatherPayload.ts";
 
 export const FORECAST_DAY_COUNT = 5;
@@ -62,11 +65,9 @@ export function normalizeForecast(
   }
 
   const utcOffset = readNumber(asRecord(data.city)?.timezone);
-  const dateKey = createCityTimeFormatter(timezone, utcOffset, {
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-  });
+
+  const dateKey = createCityDateFormatter(timezone, utcOffset);
+
   const dateLabel = createCityTimeFormatter(timezone, utcOffset, {
     weekday: "short",
     month: "short",
@@ -103,5 +104,9 @@ export function normalizeForecast(
       };
     });
 
-  return { days, usesLocalTime: dateKey.usesLocalTime };
+  return {
+    days,
+    usesLocalTime: dateKey.usesLocalTime,
+    utcOffsetSeconds: utcOffset,
+  };
 }
