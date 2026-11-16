@@ -5,6 +5,7 @@ import { getBrowserLocation } from "./services/browserLocation";
 import type { City } from "./types/city";
 import CurrentWeatherPanel from "./components/CurrentWeather/CurrentWeatherPanel";
 import ForecastPanel from "./components/Forecast/ForecastPanel";
+import FavoritesPanel from "./components/Favorites/FavoritesPanel";
 import "./App.css";
 
 // Mount shared branding above the main weather content.
@@ -90,6 +91,11 @@ export default function App() {
               Search for a city to get started.
             </p>
           )}
+
+          <FavoritesPanel
+            selectedCity={selectedCity}
+            onCitySelect={selectCity}
+          />
         </section>
 
         <aside className="dashboard__panel" aria-labelledby="articles-heading">
