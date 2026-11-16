@@ -1,11 +1,10 @@
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { getForecast } from "../../services/forecast";
 import { FORECAST_DAY_COUNT } from "../../services/normalizeForecast";
 import type { City } from "../../types/city";
 import type { Forecast } from "../../types/weather";
 import WeatherIcon from "../WeatherIcon/WeatherIcon";
+import LoadingState from "../LoadingState/LoadingState";
 import "./ForecastPanel.css";
 
 type ForecastResult =
@@ -76,16 +75,13 @@ export default function ForecastPanel({ city }: { city: City }) {
 
       <div role="status" className="text-sm">
         {result.status === "loading" && (
-          <p className="flex items-center gap-2">
-            <FontAwesomeIcon
-              icon={faSpinner}
-              aria-hidden="true"
-              className="motion-safe:animate-spin"
-            />
-            Loading forecast…
-          </p>
+          <LoadingState
+            message={`Retrieving the five-day forecast for ${city.name}…`}
+          />
         )}
+
         {result.status === "error" && <p>{result.message}</p>}
+
         {forecast && (
           <p className="dashboard__description text-xs">
             Starts {forecast.days[0]?.dateLabel} (

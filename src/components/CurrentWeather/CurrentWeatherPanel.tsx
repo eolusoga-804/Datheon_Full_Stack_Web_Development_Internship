@@ -1,5 +1,3 @@
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { getCurrentWeather } from "../../services/currentWeather";
 import type { City } from "../../types/city";
@@ -8,6 +6,7 @@ import { formatCity } from "../../utils/formatCity";
 import WeatherIcon from "../WeatherIcon/WeatherIcon";
 import WeatherTimes from "./WeatherTimes";
 import WeatherTelemetry from "../WeatherTelemetry/WeatherTelemetry";
+import LoadingState from "../LoadingState/LoadingState";
 
 type WeatherResult =
   | { status: "loading" }
@@ -62,14 +61,9 @@ export default function CurrentWeatherPanel({ city }: { city: City }) {
       {/* Announce the result without making the retry button part of the status. */}
       <div role="status" className="text-sm">
         {result.status === "loading" && (
-          <p className="flex items-center gap-2">
-            <FontAwesomeIcon
-              icon={faSpinner}
-              aria-hidden="true"
-              className="motion-safe:animate-spin"
-            />
-            Loading current weather…
-          </p>
+          <LoadingState
+            message={`Retrieving current weather for ${city.name}…`}
+          />
         )}
 
         {result.status === "error" && <p>{result.message}</p>}
