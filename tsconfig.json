@@ -1,4 +1,11 @@
 {
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "NodeNext",
+    "types": ["node"],
+    "skipLibCheck": true,
+    "rewriteRelativeImportExtensions": true
+  },
   "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },
