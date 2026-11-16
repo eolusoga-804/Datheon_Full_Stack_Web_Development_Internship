@@ -8,12 +8,11 @@ export async function getForecast(
   city: Pick<City, "latitude" | "longitude" | "timezone">,
   signal?: AbortSignal,
 ): Promise<Forecast> {
-  const payload = await requestWeather(
+  return requestWeather(
     "/api/forecast",
     city,
     "The forecast is temporarily unavailable. Try again.",
+    (payload) => normalizeForecast(payload, city.timezone),
     signal,
   );
-
-  return normalizeForecast(payload, city.timezone);
 }

@@ -53,12 +53,11 @@ export async function getCurrentWeather(
   city: Pick<City, "latitude" | "longitude">,
   signal?: AbortSignal,
 ): Promise<CurrentWeather> {
-  const payload = await requestWeather(
+  return requestWeather(
     "/api/current-weather",
     city,
     "Current weather is temporarily unavailable. Try again.",
+    normalizeCurrentWeather,
     signal,
   );
-
-  return normalizeCurrentWeather(payload);
 }
