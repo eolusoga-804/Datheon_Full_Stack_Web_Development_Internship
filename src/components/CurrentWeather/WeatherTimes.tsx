@@ -2,20 +2,16 @@ import { useEffect, useState } from "react";
 import type { City } from "../../types/city";
 import type { CurrentWeather } from "../../types/weather";
 import { createCityTimeFormatter } from "../../utils/createCityTimeFormatter";
+import { getWeatherTheme } from "../../utils/getWeatherTheme";
 
 type WeatherTimesProps = {
   timezone: City["timezone"];
-  calculatedAtUnix: CurrentWeather["calculatedAtUnix"];
-  utcOffsetSeconds: CurrentWeather["utcOffsetSeconds"];
+  weather: CurrentWeather;
 };
 
 const CLOCK_REFRESH_MS = 10_000;
 
-export default function WeatherTimes({
-  timezone,
-  calculatedAtUnix,
-  utcOffsetSeconds,
-}: WeatherTimesProps) {
+export default function WeatherTimes({ timezone, weather }: WeatherTimesProps) {
   const [now, setNow] = useState(() => new Date());
 
   // Update the clock independently of weather requests.
@@ -28,15 +24,18 @@ export default function WeatherTimes({
     return () => window.clearInterval(timer);
   }, []);
 
-  const clock = createCityTimeFormatter(timezone, utcOffsetSeconds, {
+  const clock = createCityTimeFormatter(timezone, weather.utcOffsetSeconds, {
     dateStyle: "medium",
     timeStyle: "short",
   });
-  const calculatedAt = new Date(calculatedAtUnix * 1_000);
+  const calculatedAt = new Date(weather.calculatedAtUnix * 1_000);
   const hasValidTimestamp = Number.isFinite(calculatedAt.getTime());
 
   return (
-    <dl className="dashboard__description flex flex-wrap gap-x-4 gap-y-1 text-xs">
+    <dl
+      className="dashboard__description flex flex-wrap gap-x-4 gap-y-1 text-xs"
+      data-weather-theme={getWeatherTheme(weather, timezone, now)}
+    >
       <div>
         <dt className="font-semibold">
           {clock.usesLocalTime ? "Local time" : "Time (UTC)"}

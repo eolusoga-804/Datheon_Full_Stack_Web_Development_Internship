@@ -101,11 +101,7 @@ export default function CurrentWeatherPanel({ city }: { city: City }) {
 
       {/* Keep the ticking clock outside the live announcement region. */}
       {result.status === "ready" && (
-        <WeatherTimes
-          timezone={city.timezone}
-          calculatedAtUnix={result.weather.calculatedAtUnix}
-          utcOffsetSeconds={result.weather.utcOffsetSeconds}
-        />
+        <WeatherTimes timezone={city.timezone} weather={result.weather} />
       )}
 
       {result.status === "ready" && (

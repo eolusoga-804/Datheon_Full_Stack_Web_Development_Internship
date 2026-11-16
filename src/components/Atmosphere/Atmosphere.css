@@ -5,6 +5,24 @@
   inset: 0;
   overflow: hidden;
   pointer-events: none;
+  background: var(--weather-gradient, var(--gradient-canvas));
+}
+
+/* Change the fixed canvas while keeping the glowing orbs in front of it. */
+#root:has([data-weather-theme="sunny"]) .atmosphere {
+  --weather-gradient: linear-gradient(145deg, #714012, #295fa2 53%, #22194a);
+}
+
+#root:has([data-weather-theme="cloudy"]) .atmosphere {
+  --weather-gradient: linear-gradient(145deg, #536276, #343d55 53%, #25263c);
+}
+
+#root:has([data-weather-theme="rainy"]) .atmosphere {
+  --weather-gradient: linear-gradient(145deg, #00616a, #153b60 52%, #101b39);
+}
+
+#root:has([data-weather-theme="night"]) .atmosphere {
+  --weather-gradient: linear-gradient(145deg, #101735, #211444 55%, #080c20);
 }
 
 .atmosphere__orb {
