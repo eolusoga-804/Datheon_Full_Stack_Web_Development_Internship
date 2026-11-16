@@ -12,6 +12,8 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#11152d" />
 
+    <link rel="stylesheet" href="/startup.css" />
+
     <!-- Load variable fonts and keep fallback text visible during download. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -21,8 +23,24 @@
     />
   </head>
   <body>
-    <!-- React mounts the dashboard here. -->
-    <div id="root"></div>
+    <!-- React replaces this startup screen when the dashboard mounts. -->
+    <div id="root">
+      <main class="startup-screen">
+        <img src="/favicon.svg" alt="" width="56" height="56" />
+        <h1>MyForecast</h1>
+
+        <div class="startup-screen__loading" role="status">
+          <p>Starting the weather dashboard…</p>
+          <div class="startup-screen__track" aria-hidden="true">
+            <span class="startup-screen__fill"></span>
+          </div>
+        </div>
+
+        <noscript>
+          <p>Enable JavaScript and reload to use MyForecast.</p>
+        </noscript>
+      </main>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
