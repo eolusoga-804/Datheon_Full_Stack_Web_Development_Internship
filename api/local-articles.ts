@@ -3,11 +3,23 @@ const ARTICLE_LIMIT = 4;
 const TIMEOUT_MS = 8_000;
 const CITY_NAME_PATTERN = /^[\p{L}\p{M}\p{N} .,'’()-]+$/u;
 
+const WEATHER_HEADLINE_PATTERN =
+  /\b(?:weather|rain(?:s|fall|falling|ing)?|flood(?:s|ed|ing)?|heatwaves?|storms?|cyclones?|hurricanes?|typhoons?|droughts?)\b/;
+
 function json(body: unknown, status = 200, headers?: Record<string, string>) {
   return Response.json(body, {
     status,
     headers: { "Cache-Control": "no-store", ...headers },
   });
+}
+
+// Normalize punctuation and case so a city matches as a complete phrase.
+function normalizeHeadlineText(value: string): string {
+  return value
+    .normalize("NFKC")
+    .toLocaleLowerCase("en")
+    .replace(/[^\p{L}\p{M}\p{N}]+/gu, " ")
+    .trim();
 }
 
 // Return only the metadata needed for an original article link.
@@ -62,7 +74,7 @@ export default {
       "api-key": apiKey,
       q: `"${city}" AND (weather OR flooding OR heatwave OR storm)`,
       type: "article",
-      "page-size": String(ARTICLE_LIMIT),
+
       "order-by": "relevance",
     }).toString();
 
@@ -97,9 +109,18 @@ export default {
         );
       }
 
+      const cityPhrase = ` ${normalizeHeadlineText(city)} `;
+
       const articles = results
         .map(readArticle)
-        .filter((article) => article !== undefined);
+        .filter((article) => article !== undefined)
+        .filter(({ title }) => {
+          const headline = normalizeHeadlineText(title);
+          return (
+            ` ${headline} `.includes(cityPhrase) &&
+            WEATHER_HEADLINE_PATTERN.test(headline)
+          );
+        });
 
       const uniqueArticles = new Map(
         articles.map((article) => [article.url, article]),
