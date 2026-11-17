@@ -5,7 +5,6 @@ import { getBrowserLocation } from "./services/browserLocation";
 import type { City } from "./types/city";
 import FavoritesPanel from "./components/Favorites/FavoritesPanel";
 import LocalArticles from "./components/LocalArticles/LocalArticles";
-import Personalization from "./components/Personalization/Personalization";
 import LoadingState from "./components/LoadingState/LoadingState";
 import CityWeather from "./components/CityWeather/CityWeather";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
@@ -13,6 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useFavorites } from "./hooks/useFavorites";
 import { isFavoriteCity } from "./services/favoriteStorage";
 import { formatCity } from "./utils/formatCity";
+import InstallInvitation from "./components/InstallInvitation/InstallInvitation";
 import "./App.css";
 
 // Mount shared branding above the main weather content.
@@ -146,7 +146,7 @@ export default function App() {
             </p>
           )}
 
-          <Personalization />
+          <InstallInvitation paused={false} />
         </section>
 
         <aside
