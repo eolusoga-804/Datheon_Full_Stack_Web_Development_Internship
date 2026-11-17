@@ -3,17 +3,27 @@ import SiteHeader from "./components/SiteHeader/SiteHeader";
 import { useRef, useState } from "react";
 import { getBrowserLocation } from "./services/browserLocation";
 import type { City } from "./types/city";
-
 import FavoritesPanel from "./components/Favorites/FavoritesPanel";
 import LocalArticles from "./components/LocalArticles/LocalArticles";
 import Personalization from "./components/Personalization/Personalization";
 import LoadingState from "./components/LoadingState/LoadingState";
 import CityWeather from "./components/CityWeather/CityWeather";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useFavorites } from "./hooks/useFavorites";
+import { isFavoriteCity } from "./services/favoriteStorage";
+import { formatCity } from "./utils/formatCity";
 import "./App.css";
 
 // Mount shared branding above the main weather content.
 export default function App() {
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
+
+  // Keep the weather action and Favorites panel in sync.
+  const { cities, storageAvailable, saveCity, removeCity } = useFavorites();
+  const isSelectedCitySaved = cities.some(
+    (city) => city.id === selectedCity?.id,
+  );
 
   const locationRequest = useRef(0);
   const [isLocating, setIsLocating] = useState(false);
@@ -72,7 +82,13 @@ export default function App() {
 
       <main id="weather-dashboard" className="dashboard" tabIndex={-1}>
         {/* Keep favorite cities first in the mobile layout and keyboard order. */}
-        <FavoritesPanel selectedCity={selectedCity} onCitySelect={selectCity} />
+        <FavoritesPanel
+          cities={cities}
+          storageAvailable={storageAvailable}
+          selectedCity={selectedCity}
+          onCitySelect={selectCity}
+          onRemoveCity={removeCity}
+        />
 
         <section
           className="dashboard__panel dashboard__panel--weather"
@@ -96,10 +112,34 @@ export default function App() {
           </div>
 
           {selectedCity ? (
-            <CityWeather
-              key={`${selectedCity.id}:${selectedCity.latitude}:${selectedCity.longitude}`}
-              city={selectedCity}
-            />
+            <>
+              {/* Keep long city names readable while giving the save action its own space. */}
+              <div className="dashboard__city-row">
+                <h3
+                  className="dashboard__city-name"
+                  title={formatCity(selectedCity)}
+                >
+                  {formatCity(selectedCity)}
+                </h3>
+
+                {isFavoriteCity(selectedCity) && (
+                  <button
+                    type="button"
+                    className="favorite-save"
+                    disabled={isSelectedCitySaved}
+                    onClick={() => saveCity(selectedCity)}
+                  >
+                    <FontAwesomeIcon icon={faStar} aria-hidden="true" />
+                    {isSelectedCitySaved ? "City saved" : "Save this city"}
+                  </button>
+                )}
+              </div>
+
+              <CityWeather
+                key={`${selectedCity.id}:${selectedCity.latitude}:${selectedCity.longitude}`}
+                city={selectedCity}
+              />
+            </>
           ) : (
             <p className="dashboard__description text-sm">
               Search for a city to get started.

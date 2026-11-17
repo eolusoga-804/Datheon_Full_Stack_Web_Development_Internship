@@ -1,59 +1,25 @@
-import { faStar, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
-import {
-  isFavoriteCity,
-  readFavorites,
-  writeFavorites,
-} from "../../services/favoriteStorage";
 import type { City } from "../../types/city";
 import { formatCity } from "../../utils/formatCity";
 import "./FavoritesPanel.css";
 
-type FavoritesState = {
+type FavoritesPanelProps = {
   cities: City[];
   storageAvailable: boolean;
-};
-
-type FavoritesPanelProps = {
   selectedCity: City | null;
   onCitySelect: (city: City) => void;
+  onRemoveCity: (cityId: number) => void;
 };
 
-function loadFavorites(): FavoritesState {
-  try {
-    return { cities: readFavorites(), storageAvailable: true };
-  } catch {
-    return { cities: [], storageAvailable: false };
-  }
-}
-
+// Render the shared favorites list and forward each row action.
 export default function FavoritesPanel({
+  cities,
+  storageAvailable,
   selectedCity,
   onCitySelect,
+  onRemoveCity,
 }: FavoritesPanelProps) {
-  const [{ cities, storageAvailable }, setFavorites] = useState(loadFavorites);
-  const canSave = isFavoriteCity(selectedCity);
-  const isSaved = cities.some((city) => city.id === selectedCity?.id);
-
-  // Keep favorites usable for the session if browser storage fails.
-  function updateFavorites(next: City[]) {
-    if (storageAvailable) {
-      try {
-        writeFavorites(next);
-      } catch {
-        setFavorites({ cities: next, storageAvailable: false });
-        return;
-      }
-    }
-
-    setFavorites({ cities: next, storageAvailable });
-  }
-
-  function saveSelectedCity() {
-    if (canSave && !isSaved) updateFavorites([...cities, selectedCity]);
-  }
-
   return (
     <section
       className="dashboard__panel dashboard__panel--favorites favorites"
@@ -62,18 +28,6 @@ export default function FavoritesPanel({
       <h2 id="favorites-heading" className="text-base font-semibold">
         Favorites
       </h2>
-
-      {canSave && (
-        <button
-          type="button"
-          className="favorites__save"
-          disabled={isSaved}
-          onClick={saveSelectedCity}
-        >
-          <FontAwesomeIcon icon={faStar} aria-hidden="true" />
-          {isSaved ? "City saved" : "Save this city"}
-        </button>
-      )}
 
       {!storageAvailable && (
         <p className="dashboard__description text-xs" role="status">
@@ -89,6 +43,7 @@ export default function FavoritesPanel({
         <ul className="flex flex-col gap-1">
           {cities.map((city) => (
             <li key={city.id} className="flex items-center gap-1">
+              {/* Load weather for the saved city. */}
               <button
                 type="button"
                 aria-current={city.id === selectedCity?.id ? "true" : undefined}
@@ -97,15 +52,13 @@ export default function FavoritesPanel({
               >
                 {formatCity(city)}
               </button>
+
+              {/* Remove the favorite through the trash button. */}
               <button
                 type="button"
                 aria-label={`Remove ${formatCity(city)} from favorites`}
                 className="size-11 shrink-0 rounded-lg hover:bg-white/10 focus-visible:outline-2"
-                onClick={() =>
-                  updateFavorites(
-                    cities.filter((saved) => saved.id !== city.id),
-                  )
-                }
+                onClick={() => onRemoveCity(city.id)}
               >
                 <FontAwesomeIcon icon={faTrashCan} aria-hidden="true" />
               </button>

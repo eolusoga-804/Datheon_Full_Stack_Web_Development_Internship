@@ -3,7 +3,7 @@
   gap: 0.375rem;
 }
 
-.favorites__save {
+.favorite-save {
   display: inline-flex;
   min-block-size: 2.75rem;
   align-items: center;
@@ -20,22 +20,22 @@
   cursor: pointer;
 }
 
-.favorites__save:hover:enabled {
+.favorite-save:hover:enabled {
   border-color: var(--color-text-muted);
 }
 
-.favorites__save:focus-visible {
+.favorite-save:focus-visible {
   outline: 2px solid #a8c5ff;
   outline-offset: 2px;
 }
 
-.favorites__save:disabled {
+.favorite-save:disabled {
   background: var(--glass-background);
   cursor: default;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .favorites__save:enabled {
+  .favorite-save:enabled {
     animation: favorites-gradient 1.8s ease-in-out infinite alternate;
   }
 }

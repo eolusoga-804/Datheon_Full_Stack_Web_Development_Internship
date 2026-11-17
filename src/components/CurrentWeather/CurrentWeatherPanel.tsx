@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { getCurrentWeather } from "../../services/currentWeather";
 import type { City } from "../../types/city";
 import type { CurrentWeather, Forecast } from "../../types/weather";
-import { formatCity } from "../../utils/formatCity";
 import WeatherIcon from "../WeatherIcon/WeatherIcon";
 import WeatherTimes from "./WeatherTimes";
 import WeatherTelemetry from "../WeatherTelemetry/WeatherTelemetry";
@@ -62,8 +61,6 @@ export default function CurrentWeatherPanel({
 
   return (
     <div className="flex flex-col gap-1">
-      <h3 className="text-base font-medium">{formatCity(city)}</h3>
-
       {/* Announce the result without making the retry button part of the status. */}
       <div role="status" className="text-sm">
         {result.status === "loading" && (
