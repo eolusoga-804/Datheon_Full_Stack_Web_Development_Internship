@@ -16,6 +16,7 @@ export default defineConfig({
       workbox: {
         // Precache built files only. Keep live API requests on the network.
         globPatterns: ["**/*.{html,js,css,svg,png,webmanifest}"],
+        globIgnores: ["social-card.png"],
         cleanupOutdatedCaches: true,
         navigateFallback: "index.html",
         navigateFallbackAllowlist: [/^\/(?:\?.*)?$/],
