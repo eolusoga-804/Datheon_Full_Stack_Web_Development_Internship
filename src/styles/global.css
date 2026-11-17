@@ -13,9 +13,12 @@
   --color-text: #f7f8ff;
   --color-text-muted: #d3dcf7;
   --gradient-canvas: linear-gradient(135deg, #123663, #27204e 60%, #381b58);
-  --glass-background: rgb(16 21 47 / 48%);
-  --glass-border: rgb(214 226 255 / 28%);
-  --glass-blur: 16px;
+
+  /* Reveal the atmospheric background through lightly tinted glass surfaces. */
+  --glass-background: rgb(16 21 47 / 24%);
+  --glass-border: rgb(214 226 255 / 32%);
+  --glass-blur: 10px;
+
   --glass-radius: 1rem;
 
   /* Keep the fixed header and page content aligned at every width. */

@@ -14,7 +14,10 @@
   padding-inline: 0.75rem;
   border: 1px solid var(--glass-border);
   border-radius: 999px;
-  background: rgb(12 18 45 / 55%);
+
+  /* Keep the input readable while revealing the background beneath the header. */
+  background: rgb(12 18 45 / 28%);
+
   color: var(--color-text-muted);
 }
 
@@ -57,7 +60,11 @@
   overscroll-behavior: contain;
   border: 1px solid var(--glass-border);
   border-radius: 0.875rem;
-  background: #182140;
+
+  /* Give suggestions a readable glass surface above the dashboard content. */
+  background: rgb(16 21 47 / 30%);
+  backdrop-filter: blur(18px);
+
   color: var(--color-text);
   box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 32%);
 }
@@ -71,9 +78,14 @@
   overflow-wrap: anywhere;
 }
 
+/* Highlight pointer and keyboard selections with a translucent project gradient. */
 .city-search__option:hover,
 .city-search__option[aria-selected="true"] {
-  background: #344782;
+  background: linear-gradient(
+    110deg,
+    rgb(59 130 246 / 40%),
+    rgb(139 92 246 / 40%)
+  );
 }
 
 .city-search__message {
