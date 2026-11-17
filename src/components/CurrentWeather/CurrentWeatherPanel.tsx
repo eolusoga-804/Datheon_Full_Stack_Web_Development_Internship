@@ -6,6 +6,8 @@ import WeatherIcon from "../WeatherIcon/WeatherIcon";
 import WeatherTimes from "./WeatherTimes";
 import WeatherTelemetry from "../WeatherTelemetry/WeatherTelemetry";
 import LoadingState from "../LoadingState/LoadingState";
+// Load the responsive summary styles and weather animations.
+import "./CurrentWeatherPanel.css";
 
 type WeatherResult =
   | { status: "loading" }
@@ -72,22 +74,28 @@ export default function CurrentWeatherPanel({
         {result.status === "error" && <p>{result.message}</p>}
 
         {result.status === "ready" && (
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            {/* The visible condition text supplies the meaning of the icon. */}
-            <WeatherIcon
-              conditionCode={result.weather.conditionCode}
-              providerIconCode={result.weather.providerIconCode}
-              className="shrink-0 text-4xl text-sky-200"
-            />
+          <div className="current-weather__summary">
+            {/* Keep the condition icon decorative because the description supplies its meaning. */}
+            <span className="current-weather__icon-glass">
+              <WeatherIcon
+                conditionCode={result.weather.conditionCode}
+                providerIconCode={result.weather.providerIconCode}
+                className="current-weather__icon"
+              />
+            </span>
 
-            <div className="min-w-0">
-              <p className="text-3xl font-semibold tabular-nums">
+            {/* Scale the temperature and supporting conditions with the viewport. */}
+            <div className="current-weather__details">
+              <p className="current-weather__temperature">
                 {Math.round(result.weather.temperatureC)} °C
               </p>
-              <p className="capitalize">{result.weather.description}</p>
+
+              <p className="current-weather__condition">
+                {result.weather.description}
+              </p>
 
               {result.weather.feelsLikeC !== undefined && (
-                <p className="dashboard__description">
+                <p className="current-weather__feels-like">
                   Feels like {Math.round(result.weather.feelsLikeC)} °C
                 </p>
               )}

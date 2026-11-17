@@ -9,6 +9,8 @@ import {
   getWeatherCondition,
   getWeatherTheme,
 } from "../../utils/getWeatherTheme";
+// Share the summary's responsive time-label styles.
+import "./CurrentWeatherPanel.css";
 
 type WeatherTimesProps = {
   timezone: City["timezone"];
@@ -52,7 +54,7 @@ export default function WeatherTimes({
 
   return (
     <dl
-      className="dashboard__description flex flex-wrap gap-x-4 gap-y-1 text-xs"
+      className="current-weather__times"
       data-weather-theme={getWeatherTheme(weather, timezone, now)}
       data-weather-condition={getWeatherCondition(weather.conditionCode)}
     >

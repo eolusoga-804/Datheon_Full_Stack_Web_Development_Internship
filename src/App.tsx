@@ -95,7 +95,7 @@ export default function App() {
           aria-labelledby="weather-heading"
         >
           <h2 id="weather-heading" className="text-lg font-semibold">
-            Weather
+            Weather conditions
           </h2>
 
           <div

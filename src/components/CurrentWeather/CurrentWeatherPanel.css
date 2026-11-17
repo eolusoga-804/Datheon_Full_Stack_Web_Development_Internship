@@ -1,0 +1,151 @@
+/* Center current conditions on narrow screens with compact spacing. */
+.current-weather__summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  padding-block: 0.5rem;
+  text-align: center;
+}
+
+.current-weather__details {
+  min-inline-size: 0;
+}
+
+/* Frame the weather icon with translucent glass and blue-purple highlights. */
+.current-weather__icon-glass {
+  display: inline-flex;
+  inline-size: clamp(4.75rem, 10vw, 6.5rem);
+  aspect-ratio: 1;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--glass-border);
+  border-radius: 30%;
+  background: linear-gradient(
+    135deg,
+    rgb(125 211 252 / 18%),
+    rgb(167 139 250 / 12%)
+  );
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 30%),
+    0 0 1.5rem rgb(96 165 250 / 15%);
+  backdrop-filter: blur(8px);
+}
+
+.current-weather__icon {
+  color: #d7f3ff;
+  font-size: clamp(2.75rem, 6vw, 4rem);
+}
+
+/* Give the temperature a glass-like highlight without hiding its text. */
+.current-weather__temperature {
+  color: #eff8ff;
+  font-size: clamp(3rem, 7vw, 5rem);
+  font-weight: 600;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+  text-shadow:
+    0 1px 0 rgb(255 255 255 / 35%),
+    0 0 1.25rem rgb(125 211 252 / 30%);
+}
+
+.current-weather__condition {
+  font-size: clamp(1.125rem, 2.2vw, 1.5rem);
+  line-height: 1.4;
+  text-transform: capitalize;
+}
+
+.current-weather__feels-like {
+  color: var(--color-text-muted);
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  line-height: 1.5;
+}
+
+/* Enlarge both the labels and values while keeping dates free to wrap. */
+.current-weather__times {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1.25rem;
+  padding-block: 0.375rem;
+  color: var(--color-text-muted);
+  font-size: clamp(0.875rem, 1.4vw, 1.0625rem);
+  line-height: 1.5;
+  text-align: center;
+}
+
+.current-weather__times > div {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.current-weather__times dd {
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Place the larger-screen summary in a horizontal composition. */
+@media (min-width: 48rem) {
+  .current-weather__summary {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 1rem;
+    text-align: start;
+  }
+
+  .current-weather__times {
+    justify-content: flex-start;
+    text-align: start;
+  }
+}
+
+/* Repeat an expressive glass lift and glow, with a resting interval each cycle. */
+@media (prefers-reduced-motion: no-preference) {
+  .current-weather__icon-glass {
+    animation: current-weather-glass 6s ease-in-out infinite;
+  }
+
+  .current-weather__temperature {
+    animation: current-weather-temperature 6s ease-in-out infinite;
+  }
+}
+
+@keyframes current-weather-glass {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+
+  72% {
+    transform: translateY(-6px) rotate(-5deg);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 55%),
+      0 0 2rem rgb(125 211 252 / 50%);
+  }
+
+  84% {
+    transform: translateY(-2px) rotate(5deg);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 40%),
+      0 0 2rem rgb(167 139 250 / 50%);
+  }
+}
+
+@keyframes current-weather-temperature {
+  0%,
+  60%,
+  100% {
+    text-shadow:
+      0 1px 0 rgb(255 255 255 / 35%),
+      0 0 1.25rem rgb(125 211 252 / 30%);
+  }
+
+  75% {
+    text-shadow:
+      0 1px 0 rgb(255 255 255 / 65%),
+      0 0 1rem rgb(125 211 252 / 85%),
+      0 0 2rem rgb(167 139 250 / 65%);
+  }
+}
