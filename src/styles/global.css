@@ -21,7 +21,9 @@
   /* Keep the fixed header and page content aligned at every width. */
   --dashboard-width: 1140px;
   --page-gutter: 0.75rem;
-  --site-header-height: 7rem;
+
+  /* Reserve room for the three stacked header rows on mobile. */
+  --site-header-height: 10rem;
 
   /* Share the fixed header stack dimensions with the dashboard. */
   --announcement-height: 2rem;

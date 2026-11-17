@@ -26,6 +26,25 @@
   gap: 0.5rem;
 }
 
+/* Center the brand on mobile and scale the title up on wider screens. */
+.site-header__brand {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.site-header__brand img {
+  flex: none;
+}
+
+.site-header__title {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
 /* Put branding and search on the same row at tablet widths and above. */
 @media (min-width: 48rem) {
   .site-header__surface {
@@ -36,12 +55,18 @@
 
 /* Keep the icon button large enough to tap in the compact header. */
 .site-header__location {
-  display: grid;
+  /* Keep the labeled action centered and capped at 14rem on mobile. */
+  display: inline-flex;
   flex: none;
-  inline-size: 2.75rem;
-  block-size: 2.75rem;
-  margin-inline-start: auto;
-  place-items: center;
+  inline-size: min(100%, 14rem);
+  min-block-size: 2.75rem;
+  margin-inline: auto;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding-inline: 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 600;
   border: 1px solid var(--glass-border);
   border-radius: 999px;
   background-color: #1a2352;
@@ -68,6 +93,15 @@
 .site-header__location:disabled {
   opacity: 0.55;
   cursor: wait;
+}
+
+/* Use the label’s natural width when search and location share a row. */
+@media (min-width: 48rem) {
+  .site-header__location {
+    inline-size: auto;
+    margin-inline: 0;
+    white-space: nowrap;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {

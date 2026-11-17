@@ -22,29 +22,24 @@ export default function SiteHeader({
       <AnnouncementBar />
 
       <div className="site-header__surface">
-        <div className="flex items-center gap-2">
-          <img
-            src="/favicon.svg"
-            alt=""
-            width={40}
-            height={40}
-            className="shrink-0"
-          />
-          <h1 className="text-xl font-bold">MyForecast</h1>
-
-          <button
-            type="button"
-            className="site-header__location"
-            aria-label="Use my location"
-            title="Use my location"
-            disabled={isLocating}
-            onClick={onUseLocation}
-          >
-            <FontAwesomeIcon icon={faLocationCrosshairs} aria-hidden="true" />
-          </button>
+        {/* Keep the logo and title together as the header adapts to screen width. */}
+        <div className="site-header__brand">
+          <img src="/favicon.svg" alt="" width={40} height={40} />
+          <h1 className="site-header__title">MyForecast</h1>
         </div>
 
         <CitySearch onCitySelect={onCitySelect} />
+
+        {/* Match the visual order to the keyboard order on every screen. */}
+        <button
+          type="button"
+          className="site-header__location"
+          disabled={isLocating}
+          onClick={onUseLocation}
+        >
+          <FontAwesomeIcon icon={faLocationCrosshairs} aria-hidden="true" />
+          <span>{isLocating ? "Finding location…" : "Use my location"}</span>
+        </button>
       </div>
     </header>
   );
