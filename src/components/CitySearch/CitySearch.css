@@ -18,9 +18,12 @@
   color: var(--color-text-muted);
 }
 
+/* Highlight the complete search field while its input has focus. */
 .city-search__field:focus-within {
-  outline: 2px solid #a8c5ff;
+  border-color: var(--color-focus);
+  outline: 2px solid var(--color-focus);
   outline-offset: 2px;
+  box-shadow: 0 0 0.875rem var(--color-focus-glow);
 }
 
 .city-search__input {

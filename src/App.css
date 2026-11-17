@@ -78,7 +78,7 @@
 
 .dashboard-skip-link:focus {
   transform: none;
-  outline: 2px solid #a8c5ff;
+  outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }
 
@@ -117,7 +117,7 @@
 }
 
 .dashboard-footer__link:focus-visible {
-  outline: 2px solid #a8c5ff;
+  outline: 2px solid var(--color-focus);
   outline-offset: 4px;
 }
 
