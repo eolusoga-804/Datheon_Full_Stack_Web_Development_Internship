@@ -117,15 +117,6 @@ export default function CurrentWeatherPanel({
         <WeatherTelemetry weather={result.weather} timezone={city.timezone} />
       )}
 
-      {result.status === "ready" && (
-        <a
-          href="https://openweathermap.org/"
-          className="dashboard__description self-start text-xs underline underline-offset-2"
-        >
-          Weather data provided by OpenWeather
-        </a>
-      )}
-
       {result.status === "error" && (
         <button
           type="button"

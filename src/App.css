@@ -82,13 +82,50 @@
   outline-offset: 2px;
 }
 
-/* Match the footer’s width and gutters to the dashboard. */
+/* Separate the footer from dashboard panels while preserving shared gutters. */
 .dashboard-footer {
   max-inline-size: var(--dashboard-width);
   margin-inline: auto;
-  padding: 0.25rem var(--page-gutter) var(--page-gutter);
+  margin-block-start: clamp(1.25rem, 3vw, 2.5rem);
+  padding: 0 var(--page-gutter) var(--page-gutter);
   color: var(--color-text-muted);
-  font-size: 0.75rem;
+  font-size: clamp(0.75rem, 1.2vw, 0.875rem);
+}
+
+/* Keep the divider aligned with the dashboard's visible panel edges. */
+.dashboard-footer__content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding-block-start: 0.875rem;
+  border-block-start: 1px solid var(--glass-border);
+}
+
+/* Match attribution interactions to the project's blue-purple identity. */
+.dashboard-footer__link {
+  border-radius: 0.25rem;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  transition: color 160ms ease;
+}
+
+.dashboard-footer__link:hover {
+  color: #c4b5fd;
+}
+
+.dashboard-footer__link:focus-visible {
+  outline: 2px solid #a8c5ff;
+  outline-offset: 4px;
+}
+
+/* Respect reduced-motion preferences for footer interactions. */
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-footer__link {
+    transition: none;
+  }
 }
 
 /* Center the city row on small screens and wrap it when space runs out. */

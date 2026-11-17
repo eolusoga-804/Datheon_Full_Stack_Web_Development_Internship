@@ -166,8 +166,21 @@ export default function App() {
         </aside>
       </main>
 
+      {/* Keep developer credit and weather attribution together below the dashboard. */}
       <footer className="dashboard-footer">
-        <p>Developed by Emmanuel#804</p>
+        <div className="dashboard-footer__content">
+          <p>Developed by Emmanuel#804</p>
+
+          <a
+            className="dashboard-footer__link"
+            href="https://openweathermap.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Weather data provided by OpenWeather
+            <span className="sr-only"> (opens in a new tab)</span>
+          </a>
+        </div>
       </footer>
     </>
   );
