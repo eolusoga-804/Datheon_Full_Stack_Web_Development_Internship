@@ -1,4 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="630" viewBox="0 0 1200 630">
+  <style>@import url(&quot;https://fonts.googleapis.com/css2?family=DM+Sans:wght@400..700&amp;family=DynaPuff:wght@400..700&amp;display=swap&quot;);</style>
   <defs>
     <linearGradient id="background" x2="100%" y2="100%">
       <stop stop-color="#123663"/>
@@ -13,7 +14,7 @@
   <rect width="1200" height="630" fill="url(#background)"/>
   <rect x="42" y="42" width="1116" height="546" rx="36" fill="#11152d" fill-opacity=".38" stroke="#d6e2ff" stroke-opacity=".3" stroke-width="2"/>
   <circle cx="960" cy="310" r="315" fill="url(#glow)"/>
-  <text x="86" y="307" fill="#f7f8ff" font-family="Arial, sans-serif" font-size="84" font-weight="700">MyForecast</text>
-  <text x="90" y="368" fill="#d3dcf7" font-family="Arial, sans-serif" font-size="34">Current weather and five-day forecasts</text>
+  <text x="86" y="307" fill="#f7f8ff" font-family="DynaPuff, sans-serif" font-size="84" font-weight="700">MyForecast</text>
+  <text x="90" y="368" fill="#d3dcf7" font-family="DM Sans, sans-serif" font-size="34" font-weight="400">Current weather and five-day forecasts</text>
   <image x="887" y="219" width="192" height="192" xlink:href="data:image/png;base64,{{APP_ICON}}"/>
 </svg>
