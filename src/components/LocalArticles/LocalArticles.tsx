@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { getLocalArticles } from "../../services/localArticles";
 import type { LocalArticle } from "../../services/localArticles";
+// Reuse the dashboard's branded loading indicator for article requests.
+import LoadingState from "../LoadingState/LoadingState";
 import "./LocalArticles.css";
 
 type ArticleResult =
@@ -66,12 +68,17 @@ export default function LocalArticles({ cityName }: { cityName: string }) {
 
   return (
     <div className="local-articles">
-      <p
+      {/* Announce article progress using the shared loader without a location name. */}
+      <div
         role="status"
         className={message ? "dashboard__description text-sm" : "sr-only"}
       >
-        {message || `${articles.length} weather articles found.`}
-      </p>
+        {result.status === "loading" ? (
+          <LoadingState message="Finding local weather articles…" />
+        ) : (
+          <p>{message || `${articles.length} weather articles found.`}</p>
+        )}
+      </div>
 
       {result.status === "error" && (
         <button
@@ -87,8 +94,15 @@ export default function LocalArticles({ cityName }: { cityName: string }) {
         <ul className="local-articles__list">
           {articles.map((article) => (
             <li className="local-articles__item" key={article.url}>
-              <a className="local-articles__link" href={article.url}>
+              {/* Open the source separately and tell screen-reader users about the new tab. */}
+              <a
+                className="local-articles__link"
+                href={article.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {article.title}
+                <span className="sr-only"> (opens in a new tab)</span>
               </a>
               <p className="dashboard__description text-xs">
                 {article.source}

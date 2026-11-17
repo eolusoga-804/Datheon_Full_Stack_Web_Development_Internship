@@ -87,9 +87,9 @@ export default function CitySearch({ onCitySelect }: CitySearchProps) {
     setResult(null);
   }
 
-  // Send the chosen location to the dashboard from every selection method.
+  // Clear the search and close suggestions after any city selection.
   function selectCity(city: City) {
-    setQuery(formatCity(city));
+    setQuery("");
     closeSuggestions();
     onCitySelect(city);
   }
