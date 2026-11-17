@@ -71,8 +71,13 @@ export default function App() {
       />
 
       <main id="weather-dashboard" className="dashboard" tabIndex={-1}>
-        {/* Keep weather first in both reading and visual order. */}
-        <section className="dashboard__panel" aria-labelledby="weather-heading">
+        {/* Keep favorite cities first in the mobile layout and keyboard order. */}
+        <FavoritesPanel selectedCity={selectedCity} onCitySelect={selectCity} />
+
+        <section
+          className="dashboard__panel dashboard__panel--weather"
+          aria-labelledby="weather-heading"
+        >
           <h2 id="weather-heading" className="text-lg font-semibold">
             Weather
           </h2>
@@ -102,14 +107,12 @@ export default function App() {
           )}
 
           <Personalization />
-
-          <FavoritesPanel
-            selectedCity={selectedCity}
-            onCitySelect={selectCity}
-          />
         </section>
 
-        <aside className="dashboard__panel" aria-labelledby="articles-heading">
+        <aside
+          className="dashboard__panel dashboard__panel--articles"
+          aria-labelledby="articles-heading"
+        >
           <h2 id="articles-heading" className="text-lg font-medium">
             Local articles
           </h2>

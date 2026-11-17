@@ -1,11 +1,6 @@
-/* Keep favorites compact below the weather readings. */
-.favorites {
-  display: flex;
-  flex-direction: column;
+/* Use the dashboard’s glass surface and keep favorite controls compact. */
+.dashboard__panel.favorites {
   gap: 0.375rem;
-  margin-block-start: 0.375rem;
-  padding-block-start: 0.5rem;
-  border-block-start: 1px solid var(--glass-border);
 }
 
 .favorites__save {

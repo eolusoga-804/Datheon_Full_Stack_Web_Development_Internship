@@ -32,19 +32,28 @@
   color: var(--color-text-muted);
 }
 
-/* Give weather the wider column once both panels fit comfortably. */
+/* Keep weather on the left and stack Favorites above articles on the right. */
 @media (min-width: 64rem) {
   .dashboard {
-    flex-direction: row;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 18rem;
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas:
+      "weather favorites"
+      "weather articles";
+    align-items: start;
   }
 
-  .dashboard > section {
-    flex: 1 1 0;
+  .dashboard__panel--weather {
+    grid-area: weather;
   }
 
-  .dashboard > aside {
-    flex: 0 0 18rem;
+  .dashboard__panel--favorites {
+    grid-area: favorites;
+  }
+
+  .dashboard__panel--articles {
+    grid-area: articles;
   }
 }
 

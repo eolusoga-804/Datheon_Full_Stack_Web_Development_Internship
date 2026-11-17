@@ -55,10 +55,13 @@ export default function FavoritesPanel({
   }
 
   return (
-    <section className="favorites" aria-labelledby="favorites-heading">
-      <h3 id="favorites-heading" className="text-base font-semibold">
+    <section
+      className="dashboard__panel dashboard__panel--favorites favorites"
+      aria-labelledby="favorites-heading"
+    >
+      <h2 id="favorites-heading" className="text-base font-semibold">
         Favorites
-      </h3>
+      </h2>
 
       {canSave && (
         <button
