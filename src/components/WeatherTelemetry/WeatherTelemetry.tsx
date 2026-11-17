@@ -27,11 +27,11 @@ function formatMeasurement(value: number | undefined, unit: string) {
     : `${numberFormat.format(value)}${unit}`;
 }
 
-// Convert the reported wind bearing to the nearest compass point.
+// Show wind speed alongside the reported direction and normalized bearing.
 function formatWind(speed: number | undefined, direction: number | undefined) {
   const speedLabel = formatMeasurement(speed, " m/s");
 
-  if (speed === undefined || speed === 0 || direction === undefined) {
+  if (direction === undefined || !Number.isFinite(direction)) {
     return speedLabel;
   }
 
@@ -39,7 +39,7 @@ function formatWind(speed: number | undefined, direction: number | undefined) {
   const directionLabel =
     compassPoints[Math.round(bearing / 45) % compassPoints.length];
 
-  return `${speedLabel} · ${directionLabel}`;
+  return `${speedLabel} · ${directionLabel} (${numberFormat.format(bearing)}°)`;
 }
 
 export default function WeatherTelemetry({
