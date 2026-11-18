@@ -138,25 +138,55 @@
   --weather-effect-animation: atmosphere-rain 0.55s linear infinite;
 }
 
+/* Spread seven overlapping cloud banks across the atmospheric canvas. */
 #root:has([data-weather-condition="cloudy"]) .atmosphere::before {
-  inset: -8% -15% 0;
+  inset: -8% -15%;
   background:
     radial-gradient(
-      ellipse 38% 18% at 20% 27%,
-      rgb(218 232 255 / 42%),
-      transparent
+      ellipse 28% 12% at 12% 16%,
+      rgb(235 245 255 / 68%) 0%,
+      rgb(210 226 247 / 30%) 48%,
+      transparent 100%
     ),
     radial-gradient(
-      ellipse 44% 16% at 78% 44%,
-      rgb(195 217 247 / 38%),
-      transparent
+      ellipse 34% 14% at 63% 12%,
+      rgb(225 238 255 / 60%) 0%,
+      rgb(195 215 245 / 25%) 50%,
+      transparent 100%
     ),
     radial-gradient(
-      ellipse 34% 18% at 48% 72%,
-      rgb(180 203 233 / 32%),
-      transparent
+      ellipse 30% 12% at 88% 34%,
+      rgb(230 241 255 / 65%) 0%,
+      rgb(200 219 247 / 28%) 48%,
+      transparent 100%
+    ),
+    radial-gradient(
+      ellipse 32% 15% at 32% 40%,
+      rgb(220 235 255 / 58%) 0%,
+      rgb(190 211 240 / 25%) 50%,
+      transparent 100%
+    ),
+    radial-gradient(
+      ellipse 35% 13% at 66% 61%,
+      rgb(235 243 255 / 64%) 0%,
+      rgb(200 220 248 / 28%) 48%,
+      transparent 100%
+    ),
+    radial-gradient(
+      ellipse 28% 14% at 10% 76%,
+      rgb(225 238 255 / 60%) 0%,
+      rgb(190 210 240 / 25%) 50%,
+      transparent 100%
+    ),
+    radial-gradient(
+      ellipse 34% 12% at 79% 91%,
+      rgb(230 242 255 / 62%) 0%,
+      rgb(200 220 247 / 26%) 48%,
+      transparent 100%
     );
-  --weather-effect-animation: atmosphere-clouds 4s ease-in-out infinite
+
+  /* Reuse the existing motion rule and its reduced-motion alternative. */
+  --weather-effect-animation: atmosphere-clouds 5s ease-in-out infinite
     alternate;
 }
 
