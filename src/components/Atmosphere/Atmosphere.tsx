@@ -9,6 +9,14 @@ export default function Atmosphere() {
       <span className="atmosphere__orb atmosphere__orb--cyan" />
       <span className="atmosphere__orb atmosphere__orb--pink" />
       <span className="atmosphere__orb atmosphere__orb--mint" />
+
+      {/* Show two additional cool-colored glows during sunny daytime conditions. */}
+      <span className="atmosphere__orb atmosphere__orb--light-blue" />
+      <span className="atmosphere__orb atmosphere__orb--sky-blue" />
+
+      {/* Separate star layers so their brightness changes at different times. */}
+      <span className="atmosphere__stars atmosphere__stars--near" />
+      <span className="atmosphere__stars atmosphere__stars--far" />
     </div>
   );
 }

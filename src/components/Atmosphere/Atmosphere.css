@@ -168,20 +168,6 @@
     alternate;
 }
 
-#root:has([data-weather-theme="night"][data-weather-condition="sunny"])
-  .atmosphere::before {
-  background-image:
-    radial-gradient(circle at 18% 24%, #fff 0.0625rem, transparent 0.125rem),
-    radial-gradient(circle at 58% 71%, #a5c9ff 0.0625rem, transparent 0.125rem),
-    radial-gradient(circle at 84% 36%, #fff 0.0625rem, transparent 0.125rem);
-  background-size:
-    5rem 7rem,
-    7rem 9rem,
-    11rem 6rem;
-  --weather-effect-animation: atmosphere-light 1.8s ease-in-out infinite
-    alternate;
-}
-
 /* Let reduced-motion users see the effect without movement. */
 @media (prefers-reduced-motion: no-preference) {
   .atmosphere::before {
@@ -211,6 +197,107 @@
   }
 
   to {
+    opacity: 1;
+  }
+}
+
+/* Hide the extra sunny glows until daytime sunny weather is active. */
+.atmosphere__orb--light-blue,
+.atmosphere__orb--sky-blue {
+  display: none;
+}
+
+.atmosphere__orb--light-blue {
+  --orb-color: #b9e6ff;
+  --orb-top: 18%;
+  --orb-left: 46%;
+  --orb-x: -12vw;
+  --orb-y: 14vh;
+  --orb-duration: 4.1s;
+  --orb-delay: -1.4s;
+}
+
+.atmosphere__orb--sky-blue {
+  --orb-color: #87cefa;
+  --orb-top: 77%;
+  --orb-left: 69%;
+  --orb-x: 12vw;
+  --orb-y: -13vh;
+  --orb-duration: 4.7s;
+  --orb-delay: -2.6s;
+}
+
+#root:has([data-weather-theme="sunny"]) .atmosphere__orb--light-blue,
+#root:has([data-weather-theme="sunny"]) .atmosphere__orb--sky-blue {
+  display: block;
+}
+
+/* Draw bright points with soft halos on two independently animated layers. */
+.atmosphere__stars {
+  position: absolute;
+  inset: 0;
+  display: none;
+  opacity: 0.7;
+  background-repeat: repeat;
+}
+
+.atmosphere__stars--near {
+  background-image:
+    radial-gradient(
+      circle at 18% 24%,
+      #fff 0 1.5px,
+      rgb(186 230 253 / 55%) 2px,
+      transparent 5px
+    ),
+    radial-gradient(
+      circle at 74% 65%,
+      #e0e7ff 0 1px,
+      rgb(196 181 253 / 45%) 2px,
+      transparent 4px
+    );
+  background-size:
+    9rem 11rem,
+    13rem 8rem;
+}
+
+.atmosphere__stars--far {
+  background-image:
+    radial-gradient(
+      circle at 48% 36%,
+      #fff 0 1px,
+      rgb(186 230 253 / 40%) 2px,
+      transparent 4px
+    ),
+    radial-gradient(circle at 82% 78%, #bae6fd 0 1.5px, transparent 4px);
+  background-size:
+    11rem 14rem,
+    17rem 10rem;
+}
+
+/* Show stars at night and decorative sparkles during sunny daytime weather. */
+#root:has([data-weather-theme="night"]) .atmosphere__stars,
+#root:has([data-weather-theme="sunny"]) .atmosphere__stars {
+  display: block;
+}
+
+/* Alternate the layers so the twinkling remains clearly visible. */
+@media (prefers-reduced-motion: no-preference) {
+  .atmosphere__stars--near {
+    animation: atmosphere-stars 2.6s ease-in-out infinite;
+  }
+
+  .atmosphere__stars--far {
+    animation: atmosphere-stars 3.4s ease-in-out -1.7s infinite;
+  }
+}
+
+@keyframes atmosphere-stars {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+
+  50% {
     opacity: 1;
   }
 }
