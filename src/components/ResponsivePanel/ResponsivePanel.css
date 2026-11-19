@@ -1,0 +1,60 @@
+/* Give the entire heading a comfortable accordion toggle target. */
+.responsive-panel__toggle {
+  display: flex;
+  inline-size: 100%;
+  min-block-size: 2.75rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-inline: 0.25rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.responsive-panel__toggle:hover:enabled {
+  background: rgb(255 255 255 / 6%);
+}
+
+/* Retain compact spacing without overriding the native hidden attribute. */
+.responsive-panel__body:not([hidden]) {
+  display: flex;
+  min-inline-size: 0;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* Reflect the expanded state with a project-colored disclosure indicator. */
+.responsive-panel__chevron {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.responsive-panel__toggle[aria-expanded="true"] .responsive-panel__chevron {
+  transform: rotate(180deg);
+}
+
+/* Keep desktop sections permanently expanded without a toggle affordance. */
+@media (min-width: 64rem) {
+  .responsive-panel__toggle {
+    min-block-size: auto;
+    padding: 0;
+    cursor: default;
+  }
+
+  .responsive-panel__chevron {
+    display: none;
+  }
+}
+
+/* Animate the disclosure indicator only when motion is welcome. */
+@media (prefers-reduced-motion: no-preference) {
+  .responsive-panel__chevron {
+    transition: transform 180ms ease;
+  }
+}

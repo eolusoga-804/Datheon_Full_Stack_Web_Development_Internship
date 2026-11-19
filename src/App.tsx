@@ -1,6 +1,5 @@
 import Atmosphere from "./components/Atmosphere/Atmosphere";
 import SiteHeader from "./components/SiteHeader/SiteHeader";
-// Cancel pending location lookups when the dashboard unmounts.
 import { useEffect, useRef, useState } from "react";
 import { getBrowserLocation } from "./services/browserLocation";
 import type { City } from "./types/city";
@@ -14,8 +13,8 @@ import { useFavorites } from "./hooks/useFavorites";
 import { isFavoriteCity } from "./services/favoriteStorage";
 import { formatCity } from "./utils/formatCity";
 import InstallInvitation from "./components/InstallInvitation/InstallInvitation";
-// Resolve browser coordinates to display labels through the server.
 import { reverseLocation } from "./services/reverseLocation";
+import ResponsivePanel from "./components/ResponsivePanel/ResponsivePanel";
 import "./App.css";
 
 // Mount shared branding above the main weather content.
@@ -153,14 +152,11 @@ export default function App() {
           onMoveCity={moveCity}
         />
 
-        <section
-          className="dashboard__panel dashboard__panel--weather"
-          aria-labelledby="weather-heading"
+        <ResponsivePanel
+          className="dashboard__panel--weather"
+          headingId="weather-heading"
+          title="Weather conditions"
         >
-          <h2 id="weather-heading" className="text-lg font-semibold">
-            Weather conditions
-          </h2>
-
           <div
             role="status"
             className={
@@ -210,7 +206,7 @@ export default function App() {
           )}
 
           <InstallInvitation paused={false} />
-        </section>
+        </ResponsivePanel>
 
         <aside
           className="dashboard__panel dashboard__panel--articles"
