@@ -1,0 +1,175 @@
+/* Sets the app-wide colors, fonts, and mobile-first page foundation. */
+:root {
+  font-family: "Manrope", sans-serif;
+  color: #f2efff;
+  background: #090910;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  --font-mono: "DM Mono", monospace;
+  --color-bg: #090910;
+  --color-panel: #10101b;
+  --color-border: #28243b;
+  --color-text: #f2efff;
+  --color-muted: #a6a1bd;
+  --color-accent: #873cff;
+  --color-accent-bright: #a65bff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Makes the main workspace reachable without tabbing through the header. */
+.skip-link {
+  position: fixed;
+  z-index: 30;
+  top: 8px;
+  left: 8px;
+  padding: 10px 12px;
+  transform: translateY(-150%);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-panel);
+  color: var(--color-text);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+.app-shell {
+  width: min(100% - 32px, 1140px);
+  margin-inline: auto;
+  padding-block: 48px;
+}
+
+/* Places the sidebar beside the task workspace on wider screens. */
+.dashboard {
+  display: grid;
+  /* Keeps the mobile dashboard column within the app container. */
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "greeting"
+    "sidebar"
+    "main";
+  gap: 12px;
+  /* Leaves three times the previous 40px breathing room before the footer. */
+  padding-block: 18px 120px;
+}
+
+.dashboard__greeting {
+  grid-area: greeting;
+  padding-block: 6px 10px;
+}
+
+.dashboard__sidebar {
+  grid-area: sidebar;
+}
+
+.dashboard__main {
+  display: grid;
+  /* Prevents task form, controls, and list tracks from widening the workspace. */
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  grid-area: main;
+  align-content: start;
+  gap: 10px;
+}
+
+/* Keeps task entry and controls beneath the header while the list scrolls. */
+@media (min-width: 700px) {
+  .dashboard__task-toolbar {
+    position: sticky;
+    z-index: 9;
+    top: 73px;
+    display: grid;
+    gap: 10px;
+    padding-block: 8px;
+    background: var(--color-bg);
+  }
+
+  /* Uses the toolbar gap instead of the form's standalone bottom margin. */
+  .dashboard__task-toolbar .task-form {
+    margin-bottom: 0;
+  }
+}
+
+@media (min-width: 880px) {
+  /* Lets the desktop app shell fill the viewport height. */
+  #app {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  .dashboard {
+    grid-template-columns: minmax(210px, 250px) minmax(0, 1fr);
+    grid-template-areas:
+      "sidebar greeting"
+      "sidebar main";
+    align-items: start;
+    /* Keeps dashboard grid rows compact as the dashboard fills the viewport. */
+    align-content: start;
+    /* Tightens row spacing while retaining the desktop column gap. */
+    gap: 6px 22px;
+    padding-top: 22px;
+    /* Lets short dashboards expand and push the footer to the viewport bottom. */
+    flex: 1 0 auto;
+  }
+
+  /* Keeps the sidebar out of grid sizing while leaving space above the footer. */
+  .dashboard__sidebar {
+    position: fixed;
+    z-index: 5;
+    top: 88px;
+    left: max(16px, calc((100vw - 1140px) / 2));
+    width: 250px;
+    max-height: calc(100vh - 168px);
+    align-self: start;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  /* Reduces the gap below the greeting while keeping it comfortably spaced. */
+  .dashboard .dashboard__greeting {
+    padding-block: 10px 6px;
+  }
+
+  .dashboard__main {
+    gap: 10px;
+  }
+}
+
+.app-shell h1 {
+  margin: 0;
+  font-size: clamp(1.75rem, 6vw, 2.5rem);
+  letter-spacing: -0.04em;
+}
+
+.app-shell__status {
+  margin-top: 8px;
+  color: var(--color-muted);
+}

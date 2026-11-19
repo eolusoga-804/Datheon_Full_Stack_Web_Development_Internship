@@ -1,0 +1,167 @@
+/* Keeps status filters and sorting aligned in one compact control row. */
+.task-controls {
+  min-width: 0;
+}
+
+.task-controls__topline {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 7px;
+}
+
+.task-controls__filters {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  gap: 5px;
+  overflow-x: auto;
+  padding: 2px 1px 5px;
+  scrollbar-width: none;
+}
+
+.task-controls__filters::-webkit-scrollbar {
+  display: none;
+}
+
+.task-controls__button {
+  display: inline-flex;
+  min-height: 36px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+  background: #0d0d17;
+  color: #d5d0e9;
+  cursor: pointer;
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+
+.task-controls__button:hover {
+  border-color: #574276;
+}
+
+.task-controls__button[aria-pressed="true"] {
+  border-color: var(--color-accent);
+  background: linear-gradient(110deg, #8534ed, #6125c6);
+  color: white;
+}
+
+.task-controls__button:focus-visible,
+.task-controls__sort-select:focus-visible {
+  outline: 2px solid var(--color-accent-bright);
+  outline-offset: 2px;
+}
+
+.task-controls__count {
+  display: grid;
+  min-width: 19px;
+  height: 19px;
+  place-items: center;
+  border-radius: 20px;
+  background: rgb(255 255 255 / 12%);
+  font-family: var(--font-mono);
+  font-size: 0.61rem;
+}
+
+.task-controls__sort {
+  display: flex;
+  min-height: 36px;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 5px;
+  padding-inline: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+  color: var(--color-muted);
+}
+
+.task-controls__sort-select {
+  width: 72px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 0.68rem;
+}
+
+/* Keeps the direction toggle compact beside the selected sort option. */
+.task-controls__sort-direction {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--color-muted);
+  cursor: pointer;
+  font-size: 0.78rem;
+}
+
+.task-controls__sort-direction:hover,
+.task-controls__sort-direction:focus-visible {
+  background: rgb(135 60 255 / 14%);
+  color: var(--color-accent-bright);
+}
+
+.task-controls__sort-direction:focus-visible {
+  outline: 2px solid var(--color-accent-bright);
+  outline-offset: 2px;
+}
+
+.task-controls__sort-select option {
+  background: var(--color-panel);
+  color: var(--color-text);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+@media (min-width: 700px) {
+  .task-controls__topline {
+    gap: 10px;
+  }
+
+  .task-controls__filters {
+    gap: 7px;
+  }
+
+  .task-controls__button {
+    min-height: 42px;
+    gap: 9px;
+    padding-inline: 13px;
+    font-size: 0.78rem;
+  }
+
+  .task-controls__count {
+    min-width: 21px;
+    height: 21px;
+    font-size: 0.65rem;
+  }
+
+  .task-controls__sort {
+    min-height: 42px;
+    gap: 7px;
+    padding-inline: 10px;
+  }
+
+  .task-controls__sort-select {
+    width: 86px;
+    font-size: 0.76rem;
+  }
+}
