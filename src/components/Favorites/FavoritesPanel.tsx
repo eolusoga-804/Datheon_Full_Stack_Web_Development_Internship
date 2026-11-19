@@ -28,6 +28,18 @@ export default function FavoritesPanel({
   // Announce each requested move without shifting focus away from its control.
   const [orderMessage, setOrderMessage] = useState("");
 
+  // Preview a drag without changing the saved order until the user drops.
+  const [draggedCityId, setDraggedCityId] = useState<number | null>(null);
+  const [dropTargetId, setDropTargetId] = useState<number | null>(null);
+
+  const draggedIndex = cities.findIndex((city) => city.id === draggedCityId);
+
+  // Clear previews after dropping, cancelling, or leaving the application.
+  function clearDrag() {
+    setDraggedCityId(null);
+    setDropTargetId(null);
+  }
+
   function moveFavorite(city: City, targetIndex: number) {
     onMoveCity(city.id, targetIndex);
 
@@ -44,9 +56,10 @@ export default function FavoritesPanel({
         Favorites
       </h2>
 
-      {/* Describe keyboard operation without adding visible controls. */}
+      {/* Explain both supported desktop input methods on the same handle. */}
       <p id="favorites-reorder-help" className="sr-only">
-        Focus a reorder handle and use Arrow Up or Arrow Down to move that city.
+        Drag this handle onto another favorite, or use Arrow Up and Arrow Down
+        while the handle is focused.
       </p>
 
       {/* Keep reorder announcements separate from the visible list. */}
@@ -67,7 +80,40 @@ export default function FavoritesPanel({
       ) : (
         <ul className="flex flex-col gap-1">
           {cities.map((city, index) => (
-            <li key={city.id} className="favorites__item">
+            <li
+              key={city.id}
+              className="favorites__item"
+              data-dragging={draggedCityId === city.id || undefined}
+              data-drop-edge={
+                dropTargetId === city.id && draggedCityId !== city.id
+                  ? draggedIndex < index
+                    ? "after"
+                    : "before"
+                  : undefined
+              }
+              onDragOver={(event) => {
+                // Accept moves only while one of this list's handles is being dragged.
+                if (draggedCityId === null) return;
+                event.preventDefault();
+                event.dataTransfer.dropEffect = "move";
+                setDropTargetId(city.id);
+              }}
+              onDrop={(event) => {
+                // Commit the previewed move through the existing persistence action.
+                if (draggedCityId === null) return;
+                event.preventDefault();
+
+                const draggedCity = cities.find(
+                  (saved) => saved.id === draggedCityId,
+                );
+
+                if (draggedCity && draggedCity.id !== city.id) {
+                  moveFavorite(draggedCity, index);
+                }
+
+                clearDrag();
+              }}
+            >
               {/* Load weather for the saved city. */}
               <button
                 type="button"
@@ -108,6 +154,23 @@ export default function FavoritesPanel({
                   }
 
                   moveFavorite(city, targetIndex);
+                }}
+                draggable={cities.length > 1}
+                onDragStart={(event) => {
+                  // Supply native drag data and show the complete city row as the drag preview.
+                  event.dataTransfer.effectAllowed = "move";
+                  event.dataTransfer.setData("text/plain", String(city.id));
+
+                  const row = event.currentTarget.closest("li");
+                  if (row) event.dataTransfer.setDragImage(row, 24, 24);
+
+                  setDraggedCityId(city.id);
+                  setDropTargetId(null);
+                  setOrderMessage(`Dragging ${formatCity(city)}.`);
+                }}
+                onDragEnd={() => {
+                  // A cancelled drag leaves the original saved order intact.
+                  clearDrag();
                 }}
               >
                 <FontAwesomeIcon icon={faGripVertical} aria-hidden="true" />

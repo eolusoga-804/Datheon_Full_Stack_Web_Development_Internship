@@ -82,3 +82,63 @@
   outline: 2px solid var(--color-focus);
   outline-offset: 3px;
 }
+
+/* Anchor the destination marker and keep lifted rows above their neighbors. */
+.favorites__item {
+  position: relative;
+  border-radius: 0.75rem;
+}
+
+.favorites__reorder-handle[draggable="true"] {
+  cursor: grab;
+}
+
+.favorites__reorder-handle[draggable="true"]:active {
+  cursor: grabbing;
+}
+
+/* Give the active row an obvious glass lift without painting the grip button. */
+.favorites__item[data-dragging="true"] {
+  z-index: 1;
+  outline: 1px solid var(--color-focus);
+  outline-offset: -1px;
+  background: rgb(139 92 246 / 16%);
+  box-shadow:
+    0 0.625rem 1.5rem rgb(8 12 32 / 35%),
+    0 0 1rem rgb(139 92 246 / 30%);
+}
+
+/* Draw a bright line exactly where the city will land. */
+.favorites__item[data-drop-edge]::after {
+  position: absolute;
+  z-index: 2;
+  inset-inline: 0;
+  block-size: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #60a5fa, #c4b5fd, #60a5fa);
+  box-shadow: 0 0 0.75rem rgb(167 139 250 / 80%);
+  content: "";
+  pointer-events: none;
+}
+
+.favorites__item[data-drop-edge="before"]::after {
+  inset-block-start: -3px;
+}
+
+.favorites__item[data-drop-edge="after"]::after {
+  inset-block-end: -3px;
+}
+
+/* Animate the lifted state while preserving static feedback for reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .favorites__item {
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease,
+      background-color 180ms ease;
+  }
+
+  .favorites__item[data-dragging="true"] {
+    transform: translateY(-3px);
+  }
+}
