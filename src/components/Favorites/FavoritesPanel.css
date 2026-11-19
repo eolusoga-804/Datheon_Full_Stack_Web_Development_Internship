@@ -48,3 +48,50 @@
     background-position: 100% 50%;
   }
 }
+
+/* Preserve room for city labels while keeping each action touch accessible. */
+.favorites__item {
+  display: flex;
+  min-inline-size: 0;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.favorites__position {
+  flex: 0 0 1rem;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Stack ordering controls to preserve label width on narrow screens. */
+.favorites__order-controls {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.favorites__order-button {
+  display: inline-flex;
+  inline-size: 2.75rem;
+  min-block-size: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--glass-border);
+  border-radius: 0.75rem;
+  background: rgb(96 165 250 / 12%);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.favorites__order-button:hover:not([aria-disabled="true"]) {
+  background: rgb(139 92 246 / 30%);
+  border-color: var(--color-focus);
+}
+
+.favorites__order-button[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: default;
+}

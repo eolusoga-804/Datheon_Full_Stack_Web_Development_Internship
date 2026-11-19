@@ -47,5 +47,26 @@ export function useFavorites() {
     updateFavorites(cities.filter((city) => city.id !== cityId));
   }
 
-  return { cities, storageAvailable, saveCity, removeCity };
+  // Move a saved city to a valid position and persist the updated order.
+  function moveCity(cityId: number, targetIndex: number) {
+    const sourceIndex = cities.findIndex((city) => city.id === cityId);
+
+    if (
+      sourceIndex < 0 ||
+      !Number.isInteger(targetIndex) ||
+      targetIndex < 0 ||
+      targetIndex >= cities.length ||
+      sourceIndex === targetIndex
+    ) {
+      return;
+    }
+
+    const next = [...cities];
+    const [city] = next.splice(sourceIndex, 1);
+    next.splice(targetIndex, 0, city);
+    updateFavorites(next);
+  }
+
+  // Share all favorite actions with the dashboard.
+  return { cities, storageAvailable, saveCity, removeCity, moveCity };
 }

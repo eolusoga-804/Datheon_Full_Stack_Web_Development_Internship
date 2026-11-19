@@ -19,8 +19,9 @@ import "./App.css";
 export default function App() {
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
 
-  // Keep the weather action and Favorites panel in sync.
-  const { cities, storageAvailable, saveCity, removeCity } = useFavorites();
+  // Share favorite selection, removal, and ordering across the dashboard.
+  const { cities, storageAvailable, saveCity, removeCity, moveCity } =
+    useFavorites();
   const isSelectedCitySaved = cities.some(
     (city) => city.id === selectedCity?.id,
   );
@@ -88,6 +89,7 @@ export default function App() {
           selectedCity={selectedCity}
           onCitySelect={selectCity}
           onRemoveCity={removeCity}
+          onMoveCity={moveCity}
         />
 
         <section
