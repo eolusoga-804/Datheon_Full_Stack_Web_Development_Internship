@@ -92,7 +92,9 @@
 /* Span the viewport with a dark tint that remains 90 percent transparent. */
 .dashboard-footer {
   inline-size: 100%;
-  margin-block-start: calc(var(--footer-gap-base) * 3);
+  /* Absorb unused viewport space beneath the dashboard on every screen. */
+  margin-block-start: auto;
+  flex-shrink: 0;
   border-block-start: 1px solid var(--glass-border);
   background: rgb(8 12 28 / 10%);
   color: var(--color-text-muted);
@@ -111,24 +113,24 @@
   padding: 0.875rem var(--page-gutter);
 }
 
-/* Push the footer to the bottom of short tablet and desktop pages. */
+/* Fill the viewport and place the footer below the dashboard at every width. */
+#root {
+  display: flex;
+  min-block-size: 100dvh;
+  flex-direction: column;
+}
+
+/* Preserve three times the original footer spacing on mobile. */
+.dashboard {
+  inline-size: 100%;
+  flex-shrink: 0;
+  margin-block-end: calc(var(--footer-gap-base) * 3);
+}
+
+/* Preserve the existing tablet and desktop spacing. */
 @media (min-width: 768px) {
-  #root {
-    display: flex;
-    min-block-size: 100dvh;
-    flex-direction: column;
-  }
-
-  /* Reserve at least 2.5 times the original gap before the footer. */
   .dashboard {
-    inline-size: 100%;
     margin-block-end: calc(var(--footer-gap-base) * 2.5);
-  }
-
-  /* Absorb spare viewport height while allowing long pages to scroll normally. */
-  .dashboard-footer {
-    flex-shrink: 0;
-    margin-block-start: auto;
   }
 }
 
