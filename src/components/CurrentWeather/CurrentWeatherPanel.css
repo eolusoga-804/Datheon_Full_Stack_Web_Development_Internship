@@ -1,4 +1,4 @@
-/* Center current conditions on smaller screens with compact spacing. */
+/* Center the complete summary at every viewport width. */
 .current-weather__summary {
   display: flex;
   flex-direction: column;
@@ -8,6 +8,23 @@
   text-align: center;
 }
 
+/* Stack the icon and temperature only at 320px and below. */
+.current-weather__reading {
+  display: flex;
+  max-inline-size: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+}
+
+/* Keep the icon beside the temperature on every wider screen. */
+@media (width > 320px) {
+  .current-weather__reading {
+    flex-direction: row;
+  }
+}
+
 .current-weather__details {
   min-inline-size: 0;
 }
@@ -15,7 +32,8 @@
 /* Frame the condition icon with translucent blue-purple glass. */
 .current-weather__icon-glass {
   display: inline-flex;
-  inline-size: clamp(4.75rem, 10vw, 6.5rem);
+  /* Enlarge the glass container proportionally to the condition icon. */
+  inline-size: clamp(6.175rem, 13vw, 8.45rem);
   aspect-ratio: 1;
   flex-shrink: 0;
   align-items: center;
@@ -35,14 +53,17 @@
 
 .current-weather__icon {
   color: #d7f3ff;
-  font-size: clamp(2.75rem, 6vw, 4rem);
+  /* Increase every point of the previous responsive icon scale by 30 percent. */
+  font-size: clamp(3.575rem, 7.8vw, 5.2rem);
 }
 
 /* Scale the temperature responsively and restore its complete glass highlight. */
 .current-weather__temperature {
   color: #eff8ff;
   font-size: clamp(3rem, 7vw, 5rem);
-  font-weight: 600;
+  /* Apply the project's display font using its supported bold weight. */
+  font-family: var(--font-heading);
+  font-weight: 700;
   line-height: 1.15;
   font-variant-numeric: tabular-nums;
   text-shadow:
@@ -84,21 +105,6 @@
 .current-weather__times dd {
   color: var(--color-text);
   font-variant-numeric: tabular-nums;
-}
-
-/* Place the larger-screen summary in a horizontal composition. */
-@media (min-width: 48rem) {
-  .current-weather__summary {
-    flex-direction: row;
-    justify-content: flex-start;
-    gap: 1rem;
-    text-align: start;
-  }
-
-  .current-weather__times {
-    justify-content: flex-start;
-    text-align: start;
-  }
 }
 
 /* Repeat an expressive glass lift and glow, with a resting interval each cycle. */

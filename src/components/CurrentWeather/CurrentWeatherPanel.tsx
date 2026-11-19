@@ -75,21 +75,23 @@ export default function CurrentWeatherPanel({
 
         {result.status === "ready" && (
           <div className="current-weather__summary">
-            {/* Keep the condition icon decorative because the description supplies its meaning. */}
-            <span className="current-weather__icon-glass">
-              <WeatherIcon
-                conditionCode={result.weather.conditionCode}
-                providerIconCode={result.weather.providerIconCode}
-                className="current-weather__icon"
-              />
-            </span>
+            {/* Keep the weather icon and temperature together as one centered reading. */}
+            <div className="current-weather__reading">
+              <span className="current-weather__icon-glass">
+                <WeatherIcon
+                  conditionCode={result.weather.conditionCode}
+                  providerIconCode={result.weather.providerIconCode}
+                  className="current-weather__icon"
+                />
+              </span>
 
-            {/* Scale the temperature and supporting conditions with the viewport. */}
-            <div className="current-weather__details">
               <p className="current-weather__temperature">
                 {Math.round(result.weather.temperatureC)} °C
               </p>
+            </div>
 
+            {/* Center the supporting conditions below the main reading. */}
+            <div className="current-weather__details">
               <p className="current-weather__condition">
                 {result.weather.description}
               </p>
