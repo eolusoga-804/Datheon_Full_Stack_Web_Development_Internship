@@ -133,7 +133,8 @@ export default function App() {
         Skip to weather dashboard
       </a>
 
-      <Atmosphere />
+      {/* Reserve introductory glow orbs for the dashboard before location selection. */}
+      <Atmosphere showOrbs={selectedCity === null} />
 
       <SiteHeader
         onCitySelect={selectCity}

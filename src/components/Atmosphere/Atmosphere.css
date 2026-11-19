@@ -251,37 +251,6 @@
   }
 }
 
-/* Hide the extra sunny glows until daytime sunny weather is active. */
-.atmosphere__orb--light-blue,
-.atmosphere__orb--sky-blue {
-  display: none;
-}
-
-.atmosphere__orb--light-blue {
-  --orb-color: #b9e6ff;
-  --orb-top: 18%;
-  --orb-left: 46%;
-  --orb-x: -12vw;
-  --orb-y: 14vh;
-  --orb-duration: 4.1s;
-  --orb-delay: -1.4s;
-}
-
-.atmosphere__orb--sky-blue {
-  --orb-color: #87cefa;
-  --orb-top: 77%;
-  --orb-left: 69%;
-  --orb-x: 12vw;
-  --orb-y: -13vh;
-  --orb-duration: 4.7s;
-  --orb-delay: -2.6s;
-}
-
-#root:has([data-weather-theme="sunny"]) .atmosphere__orb--light-blue,
-#root:has([data-weather-theme="sunny"]) .atmosphere__orb--sky-blue {
-  display: block;
-}
-
 /* Draw bright points with soft halos on two independently animated layers. */
 .atmosphere__stars {
   position: absolute;
@@ -324,9 +293,8 @@
     17rem 10rem;
 }
 
-/* Show stars at night and decorative sparkles during sunny daytime weather. */
-#root:has([data-weather-theme="night"]) .atmosphere__stars,
-#root:has([data-weather-theme="sunny"]) .atmosphere__stars {
+/* Reveal twinkling stars exclusively during the selected location's nighttime. */
+#root:has([data-weather-theme="night"]) .atmosphere__stars {
   display: block;
 }
 
