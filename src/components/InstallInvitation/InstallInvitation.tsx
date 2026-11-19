@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+// Render outside glass panels so their backdrop filters cannot contain the popup.
+import { createPortal } from "react-dom";
 import "./InstallInvitation.css";
 
 const DISMISSAL_KEY = "myforecast:install-dismissed";
@@ -90,17 +92,26 @@ export default function InstallInvitation({ paused }: { paused: boolean }) {
   if (paused || dismissed || standalone) return null;
   if (!pendingPrompt && !isAppleMobile && !promptFailed) return null;
 
-  return (
-    <div className="install-invitation">
+  // Keep installation optional without blocking dashboard interaction or moving focus.
+  return createPortal(
+    <aside
+      className="install-invitation"
+      aria-labelledby="install-invitation-heading"
+    >
+      <h2 id="install-invitation-heading" className="text-sm font-medium">
+        Take MyForecast with you
+      </h2>
+
+      {/* Show installation guidance appropriate to the browser's capabilities. */}
       <p className="dashboard__description text-sm">
         {pendingPrompt
-          ? "Open MyForecast in its own window."
+          ? "Install for quick access in its own window."
           : isAppleMobile
             ? "In Safari, tap Share, then Add to Home Screen."
-            : "Use your browser menu to install MyForecast if the option is available."}
+            : "Use your browser menu to install MyForecast if available."}
       </p>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="install-invitation__actions">
         {pendingPrompt && (
           <button
             type="button"
@@ -108,17 +119,20 @@ export default function InstallInvitation({ paused }: { paused: boolean }) {
             onClick={install}
             disabled={isPrompting}
           >
-            Install MyForecast
+            {isPrompting ? "Opening…" : "Install MyForecast"}
           </button>
         )}
+
+        {/* Let users dismiss the popup without interrupting weather access. */}
         <button
           type="button"
-          className="min-h-11 rounded-full border border-white/30 px-3 text-sm focus-visible:outline-2 focus-visible:outline-offset-2"
+          className="install-invitation__dismiss"
           onClick={dismiss}
         >
-          Dismiss install invitation
+          Not now
         </button>
       </div>
-    </div>
+    </aside>,
+    document.body,
   );
 }
