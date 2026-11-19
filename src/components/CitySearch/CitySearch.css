@@ -14,10 +14,8 @@
   padding-inline: 0.75rem;
   border: 1px solid var(--glass-border);
   border-radius: 999px;
-
-  /* Keep the input readable while revealing the background beneath the header. */
-  background: rgb(12 18 45 / 28%);
-
+  /* Keep the field lightly tinted while preserving full-opacity text. */
+  background: rgb(12 18 45 / 14%);
   color: var(--color-text-muted);
 }
 
@@ -61,11 +59,9 @@
   overscroll-behavior: contain;
   border: 1px solid var(--glass-border);
   border-radius: 0.875rem;
-
-  /* Give suggestions a readable glass surface above the dashboard content. */
-  background: rgb(16 21 47 / 30%);
-  backdrop-filter: blur(18px);
-
+  /* Keep city suggestions completely opaque above moving background effects. */
+  background: #10152f;
+  backdrop-filter: none;
   color: var(--color-text);
   box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 32%);
 }

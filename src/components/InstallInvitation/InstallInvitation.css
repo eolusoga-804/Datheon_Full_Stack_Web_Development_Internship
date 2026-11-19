@@ -13,7 +13,9 @@
   padding: 0.75rem;
   border: 1px solid var(--glass-border);
   border-radius: var(--glass-radius);
-  background: rgb(16 21 47 / 30%);
+  /* Match the popup tint to the shared transparent glass surfaces. */
+  background: var(--glass-background);
+  /* background: rgb(16 21 47 / 30%); */
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 20%),
     0 0.75rem 2rem rgb(8 12 32 / 35%);

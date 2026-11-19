@@ -14,10 +14,14 @@
   --color-text-muted: #d3dcf7;
   --gradient-canvas: linear-gradient(135deg, #123663, #27204e 60%, #381b58);
 
-  /* Reveal the atmospheric background through lightly tinted glass surfaces. */
-  --glass-background: rgb(16 21 47 / 24%);
+  /* Reveal more of the atmospheric background through shared glass surfaces. */
+  --glass-background: rgb(16 21 47 / 14%);
+  --glass-blur: 8px;
+
+  /* Share a lighter tint across nested weather cards. */
+  --glass-card-background: rgb(143 169 255 / 6%);
+
   --glass-border: rgb(214 226 255 / 32%);
-  --glass-blur: 10px;
 
   --glass-radius: 1rem;
 
