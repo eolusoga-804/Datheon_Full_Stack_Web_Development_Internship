@@ -1,4 +1,4 @@
-/* Center current conditions on narrow screens with compact spacing. */
+/* Center current conditions on smaller screens with compact spacing. */
 .current-weather__summary {
   display: flex;
   flex-direction: column;
@@ -12,7 +12,7 @@
   min-inline-size: 0;
 }
 
-/* Frame the weather icon with translucent glass and blue-purple highlights. */
+/* Frame the condition icon with translucent blue-purple glass. */
 .current-weather__icon-glass {
   display: inline-flex;
   inline-size: clamp(4.75rem, 10vw, 6.5rem);
@@ -38,7 +38,7 @@
   font-size: clamp(2.75rem, 6vw, 4rem);
 }
 
-/* Give the temperature a glass-like highlight without hiding its text. */
+/* Scale the temperature responsively and restore its complete glass highlight. */
 .current-weather__temperature {
   color: #eff8ff;
   font-size: clamp(3rem, 7vw, 5rem);
@@ -50,6 +50,7 @@
     0 0 1.25rem rgb(125 211 252 / 30%);
 }
 
+/* Keep the condition and feels-like text readable at every viewport size. */
 .current-weather__condition {
   font-size: clamp(1.125rem, 2.2vw, 1.5rem);
   line-height: 1.4;
