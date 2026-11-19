@@ -45,6 +45,7 @@
   color: var(--color-text-muted);
 }
 
+/* Hide the shortcut hint on mobile and tablet layouts. */
 .city-search__shortcut {
   display: none;
 }
@@ -93,13 +94,16 @@
   color: var(--color-text-muted);
 }
 
-/* Show the platform shortcut once there is room beside the brand. */
+/* Preserve the search field's tablet and desktop sizing. */
 @media (min-width: 48rem) {
   .city-search {
     inline-size: min(100%, 26rem);
     margin-inline-start: auto;
   }
+}
 
+/* Show the keyboard shortcut hint only at the desktop layout breakpoint. */
+@media (min-width: 64rem) {
   .city-search__shortcut {
     display: inline;
     white-space: nowrap;
