@@ -82,25 +82,47 @@
   outline-offset: 2px;
 }
 
-/* Separate the footer from dashboard panels while preserving shared gutters. */
+/* Span the viewport with a dark tint that remains 90 percent transparent. */
 .dashboard-footer {
-  max-inline-size: var(--dashboard-width);
-  margin-inline: auto;
-  margin-block-start: clamp(1.25rem, 3vw, 2.5rem);
-  padding: 0 var(--page-gutter) var(--page-gutter);
+  inline-size: 100%;
+  margin-block-start: calc(var(--footer-gap-base) * 3);
+  border-block-start: 1px solid var(--glass-border);
+  background: rgb(8 12 28 / 10%);
   color: var(--color-text-muted);
   font-size: clamp(0.75rem, 1.2vw, 0.875rem);
 }
 
-/* Keep the divider aligned with the dashboard's visible panel edges. */
+/* Keep footer text aligned with the dashboard inside the full-width background. */
 .dashboard-footer__content {
   display: flex;
+  max-inline-size: var(--dashboard-width);
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem 1rem;
-  padding-block-start: 0.875rem;
-  border-block-start: 1px solid var(--glass-border);
+  margin-inline: auto;
+  padding: 0.875rem var(--page-gutter);
+}
+
+/* Push the footer to the bottom of short tablet and desktop pages. */
+@media (min-width: 768px) {
+  #root {
+    display: flex;
+    min-block-size: 100dvh;
+    flex-direction: column;
+  }
+
+  /* Reserve at least 2.5 times the original gap before the footer. */
+  .dashboard {
+    inline-size: 100%;
+    margin-block-end: calc(var(--footer-gap-base) * 2.5);
+  }
+
+  /* Absorb spare viewport height while allowing long pages to scroll normally. */
+  .dashboard-footer {
+    flex-shrink: 0;
+    margin-block-start: auto;
+  }
 }
 
 /* Match attribution interactions to the project's blue-purple identity. */

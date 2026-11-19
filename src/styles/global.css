@@ -35,6 +35,9 @@
   /* Share accessible blue-purple focus colors across interactive controls. */
   --color-focus: #a8c5ff;
   --color-focus-glow: rgb(167 139 250 / 45%);
+
+  /* Preserve the original footer gap as the basis for responsive spacing. */
+  --footer-gap-base: clamp(1.25rem, 3vw, 2.5rem);
 }
 
 /* Restore the single-row height when branding and search fit side by side. */
