@@ -156,3 +156,11 @@
       0 0 2rem rgb(167 139 250 / 65%);
   }
 }
+
+/* Emphasize the location's clock and time-of-day label with the display font. */
+.current-weather__local-time {
+  font-family: var(--font-heading);
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.5;
+}

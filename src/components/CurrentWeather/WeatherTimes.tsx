@@ -11,6 +11,8 @@ import {
   getWeatherCondition,
   getWeatherTheme,
 } from "../../utils/getWeatherTheme";
+// Derive the time-of-day label from the selected location's clock.
+import { getCityTimeOfDay } from "../../utils/getCityTimeOfDay";
 // Share the summary's responsive time-label styles.
 import "./CurrentWeatherPanel.css";
 
@@ -61,11 +63,19 @@ export default function WeatherTimes({
       data-weather-condition={getWeatherCondition(weather.conditionCode)}
       data-rain-intensity={getRainIntensity(weather.conditionCode)}
     >
+      {/* Update the local time-of-day label through the existing clock timer. */}
+      <div>
+        <dt className="font-semibold">Time of day</dt>
+        <dd className="current-weather__local-time">
+          {getCityTimeOfDay(now, timezone, weather.utcOffsetSeconds)}
+        </dd>
+      </div>
+
       <div>
         <dt className="font-semibold">
           {clock.usesLocalTime ? "Local time" : "Time (UTC)"}
         </dt>
-        <dd>
+        <dd className="current-weather__local-time">
           <time dateTime={now.toISOString()}>{clock.format(now)}</time>
         </dd>
       </div>
