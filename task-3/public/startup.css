@@ -1,0 +1,75 @@
+/* Paint the startup screen before the dashboard stylesheet loads. */
+body:has(.startup-screen) {
+  margin: 0;
+}
+
+.startup-screen {
+  box-sizing: border-box;
+  display: grid;
+  min-block-size: 100dvh;
+  place-content: center;
+  justify-items: center;
+  gap: 0.625rem;
+  padding: 1rem;
+  background: #11152d linear-gradient(135deg, #163765, #251c4f 60%, #361955);
+  color: #f7f8ff;
+  font-family: "DM Sans", system-ui, sans-serif;
+  text-align: center;
+}
+
+.startup-screen h1 {
+  margin: 0;
+  font-family: "DynaPuff", ui-rounded, system-ui, sans-serif;
+  font-size: 1.625rem;
+  font-weight: 700;
+}
+
+.startup-screen p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.startup-screen__loading {
+  display: grid;
+  inline-size: min(16rem, 100%);
+  gap: 0.625rem;
+}
+
+.startup-screen__track {
+  block-size: 0.5rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgb(161 186 255 / 25%);
+}
+
+.startup-screen__fill {
+  display: block;
+  inline-size: 36%;
+  block-size: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #49a6ff, #a070ff, #6551ef);
+  transform: translateX(90%);
+}
+
+/* Keep the progress indicator still when reduced motion is enabled. */
+@media (prefers-reduced-motion: no-preference) {
+  .startup-screen__fill {
+    animation: startup-sweep 1.1s ease-in-out infinite;
+  }
+}
+
+@keyframes startup-sweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(280%);
+  }
+}
+
+/* Show the JavaScript-disabled message in place of the progress indicator. */
+@media (scripting: none) {
+  .startup-screen__loading {
+    display: none;
+  }
+}

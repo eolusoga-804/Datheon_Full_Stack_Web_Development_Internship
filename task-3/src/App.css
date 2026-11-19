@@ -1,0 +1,196 @@
+/* Reserve space for the fixed announcement and header above the content. */
+.dashboard {
+  /* Stack the weather and article panels on narrow screens. */
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-inline-size: var(--dashboard-width);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+  /* Follow the measured header, with the original dimensions as an initial fallback. */
+  padding-block-start: calc(
+    var(
+        --header-stack-height,
+        calc(
+          var(--announcement-height) + var(--site-header-gap) +
+            var(--site-header-height)
+        )
+      ) +
+      2 * var(--page-gutter)
+  );
+  padding-block-end: var(--page-gutter);
+}
+
+/* Use one glass surface style for both panels. */
+.dashboard__panel {
+  display: flex;
+  min-inline-size: 0;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
+  background: var(--glass-background);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 12%);
+  backdrop-filter: blur(var(--glass-blur));
+}
+
+.dashboard__description {
+  color: var(--color-text-muted);
+}
+
+/* Keep weather on the left and stack Favorites above articles on the right. */
+@media (min-width: 64rem) {
+  .dashboard {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 18rem;
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas:
+      "weather favorites"
+      "weather articles";
+    align-items: start;
+  }
+
+  .dashboard__panel--weather {
+    grid-area: weather;
+  }
+
+  .dashboard__panel--favorites {
+    grid-area: favorites;
+  }
+
+  .dashboard__panel--articles {
+    grid-area: articles;
+  }
+}
+
+/* Reveal the skip link above the fixed header when it receives focus. */
+.dashboard-skip-link {
+  position: fixed;
+  z-index: 20;
+  inset-block-start: var(--page-gutter);
+  inset-inline-start: var(--page-gutter);
+  display: inline-flex;
+  min-block-size: 2.75rem;
+  align-items: center;
+  padding-inline: 0.875rem;
+  transform: translateY(-150%);
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  background: #202b57;
+  color: var(--color-text);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.dashboard-skip-link:focus {
+  transform: none;
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Span the viewport with a dark tint that remains 90 percent transparent. */
+.dashboard-footer {
+  inline-size: 100%;
+  /* Absorb unused viewport space beneath the dashboard on every screen. */
+  margin-block-start: auto;
+  flex-shrink: 0;
+  border-block-start: 1px solid var(--glass-border);
+  background: rgb(8 12 28 / 10%);
+  color: var(--color-text-muted);
+  font-size: clamp(0.75rem, 1.2vw, 0.875rem);
+}
+
+/* Keep footer text aligned with the dashboard inside the full-width background. */
+.dashboard-footer__content {
+  display: flex;
+  max-inline-size: var(--dashboard-width);
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-inline: auto;
+  padding: 0.875rem var(--page-gutter);
+}
+
+/* Fill the viewport and place the footer below the dashboard at every width. */
+#root {
+  display: flex;
+  min-block-size: 100dvh;
+  flex-direction: column;
+}
+
+/* Preserve three times the original footer spacing on mobile. */
+.dashboard {
+  inline-size: 100%;
+  flex-shrink: 0;
+  margin-block-end: calc(var(--footer-gap-base) * 3);
+}
+
+/* Preserve the existing tablet and desktop spacing. */
+@media (min-width: 768px) {
+  .dashboard {
+    margin-block-end: calc(var(--footer-gap-base) * 2.5);
+  }
+}
+
+/* Match attribution interactions to the project's blue-purple identity. */
+.dashboard-footer__link {
+  border-radius: 0.25rem;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  transition: color 160ms ease;
+}
+
+.dashboard-footer__link:hover {
+  color: #c4b5fd;
+}
+
+.dashboard-footer__link:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 4px;
+}
+
+/* Respect reduced-motion preferences for footer interactions. */
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-footer__link {
+    transition: none;
+  }
+}
+
+/* Center the city row on small screens and wrap it when space runs out. */
+.dashboard__city-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem 0.75rem;
+}
+
+.dashboard__city-name {
+  min-inline-size: 0;
+  font-size: clamp(1.125rem, 2.5vw, 1.625rem);
+  font-weight: 600;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+
+/* Keep the save action beside a centered, wrapping location on larger screens. */
+@media (min-width: 64rem) {
+  .dashboard__city-row {
+    flex-wrap: nowrap;
+  }
+
+  .dashboard__city-name {
+    flex: 1;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-align: center;
+  }
+
+  .dashboard__city-row .favorite-save {
+    flex: none;
+  }
+}

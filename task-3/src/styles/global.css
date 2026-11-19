@@ -1,0 +1,90 @@
+/* Load Tailwind utilities and the shared base reset. */
+@import "tailwindcss";
+
+/* Share the font stacks between base styles and Tailwind utilities. */
+@theme {
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "DynaPuff", ui-rounded, system-ui, sans-serif;
+}
+
+/* Share the atmospheric canvas and glass surface values across components. */
+:root {
+  --color-canvas: #11152d;
+  --color-text: #f7f8ff;
+  --color-text-muted: #d3dcf7;
+  --gradient-canvas: linear-gradient(135deg, #123663, #27204e 60%, #381b58);
+
+  /* Reveal more of the atmospheric background through shared glass surfaces. */
+  --glass-background: rgb(16 21 47 / 14%);
+  --glass-blur: 8px;
+
+  /* Share a lighter tint across nested weather cards. */
+  --glass-card-background: rgb(143 169 255 / 6%);
+
+  --glass-border: rgb(214 226 255 / 32%);
+
+  --glass-radius: 1rem;
+
+  /* Keep the fixed header and page content aligned at every width. */
+  --dashboard-width: 1140px;
+  --page-gutter: 0.75rem;
+
+  /* Reserve room for the three stacked header rows on mobile. */
+  --site-header-height: 10rem;
+
+  /* Share the fixed header stack dimensions with the dashboard. */
+  --announcement-height: 2rem;
+  --site-header-gap: 0.375rem;
+
+  /* Share accessible blue-purple focus colors across interactive controls. */
+  --color-focus: #a8c5ff;
+  --color-focus-glow: rgb(167 139 250 / 45%);
+
+  /* Preserve the original footer gap as the basis for responsive spacing. */
+  --footer-gap-base: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+/* Restore the single-row height when branding and search fit side by side. */
+@media (min-width: 48rem) {
+  :root {
+    --site-header-height: 3.625rem;
+  }
+}
+
+/* Give semantic headings the display face throughout the dashboard. */
+@layer base {
+  /* Keep the atmosphere above the body canvas and behind the dashboard. */
+  #root {
+    isolation: isolate;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    /* Paint a full-height canvas beneath the transparent surfaces. */
+    min-height: 100dvh;
+    background: var(--color-canvas) var(--gradient-canvas);
+    color: var(--color-text);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+  }
+}
+
+/* Give interactive controls a consistent visible keyboard focus indicator. */
+:is(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+/* Preserve readable system colors when the user enables forced-color mode. */
+@media (forced-colors: active) {
+  :is(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline-color: Highlight;
+  }
+}

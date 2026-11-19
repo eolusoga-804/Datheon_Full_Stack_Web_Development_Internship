@@ -1,0 +1,321 @@
+/* Keep the background fixed and clip the glow at viewport edges. */
+.atmosphere {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--weather-gradient, var(--gradient-canvas));
+}
+
+/* Change the fixed canvas while keeping the glowing orbs in front of it. */
+#root:has([data-weather-theme="sunny"]) .atmosphere {
+  --weather-gradient: linear-gradient(145deg, #714012, #295fa2 53%, #22194a);
+}
+
+#root:has([data-weather-theme="cloudy"]) .atmosphere {
+  --weather-gradient: linear-gradient(145deg, #536276, #343d55 53%, #25263c);
+}
+
+#root:has([data-weather-theme="rainy"]) .atmosphere {
+  --weather-gradient: linear-gradient(145deg, #00616a, #153b60 52%, #101b39);
+}
+
+#root:has([data-weather-theme="night"]) .atmosphere {
+  --weather-gradient: linear-gradient(145deg, #101735, #211444 55%, #080c20);
+}
+
+.atmosphere__orb {
+  position: absolute;
+  inset-block-start: var(--orb-top);
+  inset-inline-start: var(--orb-left);
+  inline-size: clamp(7rem, 27vmin, 19rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--orb-color) 0%, transparent 72%);
+  opacity: 0.68;
+  transform: translate(-50%, -50%);
+}
+
+/* Spread the colors across the viewport and vary the travel direction. */
+.atmosphere__orb--blue {
+  --orb-color: #3488ff;
+  --orb-top: 29%;
+  --orb-left: 21%;
+  --orb-x: 13vw;
+  --orb-y: 10vh;
+  --orb-duration: 3.8s;
+  --orb-delay: -1s;
+}
+
+.atmosphere__orb--violet {
+  --orb-color: #a447ff;
+  --orb-top: 25%;
+  --orb-left: 77%;
+  --orb-x: -14vw;
+  --orb-y: 13vh;
+  --orb-duration: 4.6s;
+  --orb-delay: -2s;
+}
+
+.atmosphere__orb--cyan {
+  --orb-color: #22d3ee;
+  --orb-top: 60%;
+  --orb-left: 14%;
+  --orb-x: 15vw;
+  --orb-y: -10vh;
+  --orb-duration: 4.2s;
+  --orb-delay: -0.5s;
+}
+
+.atmosphere__orb--pink {
+  --orb-color: #f451b5;
+  --orb-top: 61%;
+  --orb-left: 83%;
+  --orb-x: -13vw;
+  --orb-y: 14vh;
+  --orb-duration: 5s;
+  --orb-delay: -3s;
+}
+
+.atmosphere__orb--mint {
+  --orb-color: #34e6a5;
+  --orb-top: 85%;
+  --orb-left: 45%;
+  --orb-x: 16vw;
+  --orb-y: -11vh;
+  --orb-duration: 4.4s;
+  --orb-delay: -1.8s;
+}
+
+/* Animate position and scale when motion is enabled. */
+@media (prefers-reduced-motion: no-preference) {
+  .atmosphere__orb {
+    animation: atmosphere-drift var(--orb-duration) ease-in-out var(--orb-delay)
+      infinite alternate;
+  }
+}
+
+@keyframes atmosphere-drift {
+  from {
+    transform: translate(-50%, -50%) scale(0.85);
+  }
+
+  to {
+    transform: translate(calc(-50% + var(--orb-x)), calc(-50% + var(--orb-y)))
+      scale(1.25);
+  }
+}
+
+/* Draw each effect inside the clipped, decorative background. */
+.atmosphere::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+}
+
+/* Use normal rain as the fallback when no intensity attribute is available. */
+#root:has([data-weather-condition="rainy"]) .atmosphere::before {
+  --rain-spacing: 2.25rem;
+  --rain-speed: 0.55s;
+  --rain-opacity: 0.65;
+
+  inset: -6rem 0 0;
+  opacity: var(--rain-opacity);
+  background-image:
+    linear-gradient(
+      108deg,
+      transparent 46%,
+      rgb(165 228 255 / 75%) 50%,
+      transparent 54%
+    ),
+    linear-gradient(
+      108deg,
+      transparent 47%,
+      rgb(208 244 255 / 55%) 50%,
+      transparent 53%
+    );
+  background-position:
+    0 0,
+    0.875rem 1rem;
+  background-size:
+    var(--rain-spacing) 3rem,
+    calc(var(--rain-spacing) * 1.6) 6rem;
+  --weather-effect-animation: atmosphere-rain var(--rain-speed) linear infinite;
+}
+
+/* Spread out the drops and slow their movement for light rain. */
+#root:has([data-rain-intensity="light"]) .atmosphere::before {
+  --rain-spacing: 4.5rem;
+  --rain-speed: 1.1s;
+  --rain-opacity: 0.4;
+}
+
+/* Pack drops closer together and increase their speed for heavy rain. */
+#root:has([data-rain-intensity="heavy"]) .atmosphere::before {
+  --rain-spacing: 1rem;
+  --rain-speed: 0.3s;
+  --rain-opacity: 0.9;
+}
+
+/* Spread seven overlapping cloud banks across the atmospheric canvas. */
+#root:has([data-weather-condition="cloudy"]) .atmosphere::before {
+  inset: -8% -15%;
+  background:
+    radial-gradient(
+      ellipse 28% 12% at 12% 16%,
+      rgb(235 245 255 / 68%) 0%,
+      rgb(210 226 247 / 30%) 48%,
+      transparent 100%
+    ),
+    radial-gradient(
+      ellipse 34% 14% at 63% 12%,
+      rgb(225 238 255 / 60%) 0%,
+      rgb(195 215 245 / 25%) 50%,
+      transparent 100%
+    ),
+    radial-gradient(
+      ellipse 30% 12% at 88% 34%,
+      rgb(230 241 255 / 65%) 0%,
+      rgb(200 219 247 / 28%) 48%,
+      transparent 100%
+    ),
+    radial-gradient(
+      ellipse 32% 15% at 32% 40%,
+      rgb(220 235 255 / 58%) 0%,
+      rgb(190 211 240 / 25%) 50%,
+      transparent 100%
+    ),
+    radial-gradient(
+      ellipse 35% 13% at 66% 61%,
+      rgb(235 243 255 / 64%) 0%,
+      rgb(200 220 248 / 28%) 48%,
+      transparent 100%
+    ),
+    radial-gradient(
+      ellipse 28% 14% at 10% 76%,
+      rgb(225 238 255 / 60%) 0%,
+      rgb(190 210 240 / 25%) 50%,
+      transparent 100%
+    ),
+    radial-gradient(
+      ellipse 34% 12% at 79% 91%,
+      rgb(230 242 255 / 62%) 0%,
+      rgb(200 220 247 / 26%) 48%,
+      transparent 100%
+    );
+
+  /* Reuse the existing motion rule and its reduced-motion alternative. */
+  --weather-effect-animation: atmosphere-clouds 5s ease-in-out infinite
+    alternate;
+}
+
+#root:has([data-weather-theme="sunny"]) .atmosphere::before {
+  background:
+    radial-gradient(circle at 82% 24%, rgb(255 215 122 / 80%), transparent 27%),
+    radial-gradient(circle at 79% 28%, rgb(255 144 55 / 45%), transparent 48%);
+  --weather-effect-animation: atmosphere-light 2.4s ease-in-out infinite
+    alternate;
+}
+
+/* Let reduced-motion users see the effect without movement. */
+@media (prefers-reduced-motion: no-preference) {
+  .atmosphere::before {
+    animation: var(--weather-effect-animation, none);
+  }
+}
+
+@keyframes atmosphere-rain {
+  to {
+    transform: translateY(6rem);
+  }
+}
+
+@keyframes atmosphere-clouds {
+  from {
+    transform: translateX(-8%);
+  }
+
+  to {
+    transform: translateX(8%);
+  }
+}
+
+@keyframes atmosphere-light {
+  from {
+    opacity: 0.45;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* Draw bright points with soft halos on two independently animated layers. */
+.atmosphere__stars {
+  position: absolute;
+  inset: 0;
+  display: none;
+  opacity: 0.7;
+  background-repeat: repeat;
+}
+
+.atmosphere__stars--near {
+  background-image:
+    radial-gradient(
+      circle at 18% 24%,
+      #fff 0 1.5px,
+      rgb(186 230 253 / 55%) 2px,
+      transparent 5px
+    ),
+    radial-gradient(
+      circle at 74% 65%,
+      #e0e7ff 0 1px,
+      rgb(196 181 253 / 45%) 2px,
+      transparent 4px
+    );
+  background-size:
+    9rem 11rem,
+    13rem 8rem;
+}
+
+.atmosphere__stars--far {
+  background-image:
+    radial-gradient(
+      circle at 48% 36%,
+      #fff 0 1px,
+      rgb(186 230 253 / 40%) 2px,
+      transparent 4px
+    ),
+    radial-gradient(circle at 82% 78%, #bae6fd 0 1.5px, transparent 4px);
+  background-size:
+    11rem 14rem,
+    17rem 10rem;
+}
+
+/* Reveal twinkling stars exclusively during the selected location's nighttime. */
+#root:has([data-weather-theme="night"]) .atmosphere__stars {
+  display: block;
+}
+
+/* Alternate the layers so the twinkling remains clearly visible. */
+@media (prefers-reduced-motion: no-preference) {
+  .atmosphere__stars--near {
+    animation: atmosphere-stars 2.6s ease-in-out infinite;
+  }
+
+  .atmosphere__stars--far {
+    animation: atmosphere-stars 3.4s ease-in-out -1.7s infinite;
+  }
+}
+
+@keyframes atmosphere-stars {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}

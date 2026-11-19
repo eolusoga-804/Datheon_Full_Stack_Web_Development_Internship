@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Describe the public dashboard in the initial HTML. -->
+    <title>MyForecast | Current Weather &amp; Five-Day Forecasts</title>
+    <meta
+      name="description"
+      content="Search cities worldwide for current weather, climate telemetry, and five-day forecasts. Save favorite cities and check conditions near you."
+    />
+    <link rel="canonical" href="https://task-3-nine-phi.vercel.app/" />
+
+    <!-- Share the dashboard title, summary, and preview image with link crawlers. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="MyForecast" />
+    <meta
+      property="og:title"
+      content="MyForecast | Current Weather &amp; Five-Day Forecasts"
+    />
+    <meta
+      property="og:description"
+      content="Search cities worldwide for current weather, climate telemetry, and five-day forecasts. Save favorite cities and check conditions near you."
+    />
+    <meta property="og:url" content="https://task-3-nine-phi.vercel.app/" />
+    <meta
+      property="og:image"
+      content="https://task-3-nine-phi.vercel.app/social-card.png"
+    />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="MyForecast title and white Cloud Sun logo on a blue-purple background."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Describe the public dashboard as a web application. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "MyForecast",
+        "url": "https://task-3-nine-phi.vercel.app/",
+        "description": "Search cities worldwide for current weather, climate telemetry, and five-day forecasts. Save favorite cities and check conditions near you.",
+        "applicationCategory": "Weather",
+        "browserRequirements": "Requires JavaScript",
+        "inLanguage": "en",
+        "image": "https://task-3-nine-phi.vercel.app/social-card.png"
+      }
+    </script>
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Match the installed app and launch colors to the dashboard. -->
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#11152d" />
+
+    <link rel="stylesheet" href="/startup.css" />
+
+    <!-- Load variable fonts and keep fallback text visible during download. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400..700&amp;family=DynaPuff:wght@400..700&amp;display=swap"
+    />
+  </head>
+  <body>
+    <!-- React replaces this startup screen when the dashboard mounts. -->
+    <div id="root">
+      <main class="startup-screen">
+        <img src="/favicon.svg" alt="" width="56" height="56" />
+        <h1>MyForecast</h1>
+
+        <div class="startup-screen__loading" role="status">
+          <p>Starting the weather dashboard…</p>
+          <div class="startup-screen__track" aria-hidden="true">
+            <span class="startup-screen__fill"></span>
+          </div>
+        </div>
+
+        <noscript>
+          <p>Enable JavaScript and reload to use MyForecast.</p>
+        </noscript>
+      </main>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
