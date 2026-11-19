@@ -1,9 +1,5 @@
-// Use project icons for favorite ordering and removal.
-import {
-  faArrowDown,
-  faArrowUp,
-  faTrashCan,
-} from "@fortawesome/free-solid-svg-icons";
+// Use one grip icon for reordering and retain the separate remove action.
+import { faGripVertical, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { City } from "../../types/city";
 import { formatCity } from "../../utils/formatCity";
@@ -34,9 +30,9 @@ export default function FavoritesPanel({
 
   function moveFavorite(city: City, targetIndex: number) {
     onMoveCity(city.id, targetIndex);
-    setOrderMessage(
-      `${formatCity(city)} moved to position ${targetIndex + 1} of ${cities.length}.`,
-    );
+
+    // Describe the move without introducing numbered positions.
+    setOrderMessage(`${formatCity(city)} moved in Favorites.`);
   }
 
   return (
@@ -47,6 +43,11 @@ export default function FavoritesPanel({
       <h2 id="favorites-heading" className="text-base font-semibold">
         Favorites
       </h2>
+
+      {/* Describe keyboard operation without adding visible controls. */}
+      <p id="favorites-reorder-help" className="sr-only">
+        Focus a reorder handle and use Arrow Up or Arrow Down to move that city.
+      </p>
 
       {/* Keep reorder announcements separate from the visible list. */}
       <p className="sr-only" role="status">
@@ -67,11 +68,6 @@ export default function FavoritesPanel({
         <ul className="flex flex-col gap-1">
           {cities.map((city, index) => (
             <li key={city.id} className="favorites__item">
-              {/* Keep the position visible and identify each item's place in the list. */}
-              <span className="favorites__position" aria-hidden="true">
-                {index + 1}
-              </span>
-
               {/* Load weather for the saved city. */}
               <button
                 type="button"
@@ -82,33 +78,40 @@ export default function FavoritesPanel({
                 {formatCity(city)}
               </button>
 
-              {/* Provide touch and keyboard alternatives to the upcoming drag interaction. */}
-              <div className="favorites__order-controls">
-                <button
-                  type="button"
-                  className="favorites__order-button"
-                  aria-label={`Move ${formatCity(city)} up`}
-                  aria-disabled={index === 0}
-                  onClick={() => {
-                    if (index > 0) moveFavorite(city, index - 1);
-                  }}
-                >
-                  <FontAwesomeIcon icon={faArrowUp} aria-hidden="true" />
-                </button>
+              {/* Use one handle for keyboard ordering and the upcoming drag interaction. */}
+              <button
+                type="button"
+                className="favorites__reorder-handle"
+                aria-label={`Reorder ${formatCity(city)}`}
+                aria-describedby="favorites-reorder-help"
+                aria-keyshortcuts="ArrowUp ArrowDown"
+                onClick={() => {
+                  setOrderMessage(
+                    `Use Arrow Up or Arrow Down to reorder ${formatCity(city)}.`,
+                  );
+                }}
+                onKeyDown={(event) => {
+                  // Prevent page scrolling only when the handle receives a reorder key.
+                  if (event.key !== "ArrowUp" && event.key !== "ArrowDown")
+                    return;
+                  event.preventDefault();
 
-                <button
-                  type="button"
-                  className="favorites__order-button"
-                  aria-label={`Move ${formatCity(city)} down`}
-                  aria-disabled={index === cities.length - 1}
-                  onClick={() => {
-                    if (index < cities.length - 1)
-                      moveFavorite(city, index + 1);
-                  }}
-                >
-                  <FontAwesomeIcon icon={faArrowDown} aria-hidden="true" />
-                </button>
-              </div>
+                  const targetIndex =
+                    index + (event.key === "ArrowUp" ? -1 : 1);
+
+                  // Keep the city inside the list and explain when it reaches an edge.
+                  if (targetIndex < 0 || targetIndex >= cities.length) {
+                    setOrderMessage(
+                      `${formatCity(city)} is already ${targetIndex < 0 ? "first" : "last"} in Favorites.`,
+                    );
+                    return;
+                  }
+
+                  moveFavorite(city, targetIndex);
+                }}
+              >
+                <FontAwesomeIcon icon={faGripVertical} aria-hidden="true" />
+              </button>
 
               {/* Remove the favorite through the trash button. */}
               <button

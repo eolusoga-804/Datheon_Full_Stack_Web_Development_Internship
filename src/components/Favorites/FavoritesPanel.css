@@ -57,41 +57,32 @@
   gap: 0.25rem;
 }
 
-.favorites__position {
-  flex: 0 0 1rem;
-  color: var(--color-text-muted);
-  font-size: 0.75rem;
-  text-align: center;
-  font-variant-numeric: tabular-nums;
-}
-
-/* Stack ordering controls to preserve label width on narrow screens. */
-.favorites__order-controls {
-  display: flex;
-  flex: none;
-  flex-direction: column;
-  gap: 0.125rem;
-}
-
-.favorites__order-button {
+/* Keep the single reorder handle compact and comfortably touch accessible. */
+.favorites__reorder-handle {
   display: inline-flex;
+  flex: 0 0 2.75rem;
   inline-size: 2.75rem;
   min-block-size: 2.75rem;
   align-items: center;
   justify-content: center;
   border: 1px solid var(--glass-border);
   border-radius: 0.75rem;
-  background: rgb(96 165 250 / 12%);
+  background: linear-gradient(
+    135deg,
+    rgb(59 130 246 / 22%),
+    rgb(139 92 246 / 22%)
+  );
   color: var(--color-text);
   cursor: pointer;
 }
 
-.favorites__order-button:hover:not([aria-disabled="true"]) {
-  background: rgb(139 92 246 / 30%);
+/* Make the handle easy to identify during pointer and keyboard interaction. */
+.favorites__reorder-handle:hover,
+.favorites__reorder-handle:focus-visible {
   border-color: var(--color-focus);
-}
-
-.favorites__order-button[aria-disabled="true"] {
-  opacity: 0.4;
-  cursor: default;
+  background: linear-gradient(
+    135deg,
+    rgb(59 130 246 / 40%),
+    rgb(139 92 246 / 40%)
+  );
 }
