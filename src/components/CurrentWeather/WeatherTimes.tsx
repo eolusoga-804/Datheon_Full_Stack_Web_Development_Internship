@@ -5,7 +5,9 @@ import {
   createCityTimeFormatter,
   createCityDateFormatter,
 } from "../../utils/createCityTimeFormatter";
+// Share condition, daylight, and decorative rain-intensity decisions.
 import {
+  getRainIntensity,
   getWeatherCondition,
   getWeatherTheme,
 } from "../../utils/getWeatherTheme";
@@ -57,6 +59,7 @@ export default function WeatherTimes({
       className="current-weather__times"
       data-weather-theme={getWeatherTheme(weather, timezone, now)}
       data-weather-condition={getWeatherCondition(weather.conditionCode)}
+      data-rain-intensity={getRainIntensity(weather.conditionCode)}
     >
       <div>
         <dt className="font-semibold">

@@ -12,6 +12,28 @@ export function getWeatherCondition(conditionCode: number) {
   return "cloudy";
 }
 
+// Select a decorative rain intensity from the provider's condition description.
+export function getRainIntensity(
+  conditionCode: number,
+): "light" | "normal" | "heavy" | undefined {
+  if (getWeatherCondition(conditionCode) !== "rainy") return undefined;
+
+  // These codes explicitly describe light rain, drizzle, or thunderstorms.
+  if ([200, 210, 230, 300, 310, 500, 520].includes(conditionCode)) {
+    return "light";
+  }
+
+  // These codes explicitly describe heavy or more intense precipitation.
+  if (
+    [202, 212, 232, 302, 312, 314, 502, 503, 504, 522].includes(conditionCode)
+  ) {
+    return "heavy";
+  }
+
+  // Use the normal visual for remaining rainy conditions.
+  return "normal";
+}
+
 export function getWeatherTheme(
   weather: CurrentWeather,
   timezone: string | undefined,
