@@ -1,6 +1,7 @@
 import Atmosphere from "./components/Atmosphere/Atmosphere";
 import SiteHeader from "./components/SiteHeader/SiteHeader";
-import { useRef, useState } from "react";
+// Cancel pending location lookups when the dashboard unmounts.
+import { useEffect, useRef, useState } from "react";
 import { getBrowserLocation } from "./services/browserLocation";
 import type { City } from "./types/city";
 import FavoritesPanel from "./components/Favorites/FavoritesPanel";
@@ -13,6 +14,8 @@ import { useFavorites } from "./hooks/useFavorites";
 import { isFavoriteCity } from "./services/favoriteStorage";
 import { formatCity } from "./utils/formatCity";
 import InstallInvitation from "./components/InstallInvitation/InstallInvitation";
+// Resolve browser coordinates to display labels through the server.
+import { reverseLocation } from "./services/reverseLocation";
 import "./App.css";
 
 // Mount shared branding above the main weather content.
@@ -27,35 +30,92 @@ export default function App() {
   );
 
   const locationRequest = useRef(0);
+
+  // Keep detected labels separate from manually searched city identifiers.
+  const locationController = useRef<AbortController | null>(null);
+  const [detectedPlaceName, setDetectedPlaceName] = useState<string | null>(
+    null,
+  );
+
+  const articleCityName = selectedCity
+    ? selectedCity.id > 0
+      ? selectedCity.name
+      : detectedPlaceName
+    : null;
+
+  // Stop pending reverse lookup when the dashboard unmounts.
+  useEffect(() => {
+    return () => locationController.current?.abort();
+  }, []);
+
   const [isLocating, setIsLocating] = useState(false);
   const [locationMessage, setLocationMessage] = useState("");
 
+  // Give manual city selection priority over pending location detection.
   function selectCity(city: City) {
-    // Invalidate a pending location result when the user selects a city.
     locationRequest.current += 1;
+    locationController.current?.abort();
+    setDetectedPlaceName(null);
     setIsLocating(false);
     setLocationMessage("");
     setSelectedCity(city);
   }
 
+  // Load weather at detected coordinates and resolve the associated place separately.
   async function useCurrentLocation() {
     const requestId = ++locationRequest.current;
+    locationController.current?.abort();
+
+    const controller = new AbortController();
+    locationController.current = controller;
     setIsLocating(true);
     setLocationMessage("Finding your location…");
 
     try {
       const coordinates = await getBrowserLocation();
-      if (requestId !== locationRequest.current) return;
+      if (requestId !== locationRequest.current || controller.signal.aborted)
+        return;
 
-      // Keep the rounded coordinates in the current dashboard session.
-      setSelectedCity({
+      // Start weather immediately and keep rounded coordinates in this visit only.
+      const detectedCity: City = {
         id: -1,
         name: "Current location",
         ...coordinates,
-      });
-      setLocationMessage("");
+      };
+
+      setSelectedCity(detectedCity);
+      setDetectedPlaceName(null);
+      setLocationMessage("Resolving your place name…");
+
+      try {
+        const labels = await reverseLocation(coordinates, controller.signal);
+        if (
+          requestId !== locationRequest.current ||
+          controller.signal.aborted
+        ) {
+          return;
+        }
+
+        // Preserve coordinates so weather continues to represent the detected position.
+        setSelectedCity({ ...detectedCity, ...labels });
+        setDetectedPlaceName(labels.name);
+        setLocationMessage("");
+      } catch {
+        if (
+          requestId !== locationRequest.current ||
+          controller.signal.aborted
+        ) {
+          return;
+        }
+
+        // A failed place lookup must not prevent coordinate-based weather from loading.
+        setLocationMessage(
+          "Weather uses your detected position. Its place name is unavailable; search for a city to view local articles.",
+        );
+      }
     } catch (error) {
-      if (requestId !== locationRequest.current) return;
+      if (requestId !== locationRequest.current || controller.signal.aborted)
+        return;
 
       setLocationMessage(
         error instanceof Error
@@ -158,8 +218,11 @@ export default function App() {
           <h2 id="articles-heading" className="text-lg font-medium">
             Local articles
           </h2>
-          {selectedCity && selectedCity.id > 0 ? (
-            <LocalArticles key={selectedCity.id} cityName={selectedCity.name} />
+          {articleCityName ? (
+            <LocalArticles
+              key={`${articleCityName}:${selectedCity?.country ?? ""}`}
+              cityName={articleCityName}
+            />
           ) : (
             <p className="dashboard__description text-sm">
               Choose a city to explore local weather articles.
