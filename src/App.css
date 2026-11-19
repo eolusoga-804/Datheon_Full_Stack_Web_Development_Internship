@@ -7,9 +7,16 @@
   max-inline-size: var(--dashboard-width);
   margin-inline: auto;
   padding-inline: var(--page-gutter);
+  /* Follow the measured header, with the original dimensions as an initial fallback. */
   padding-block-start: calc(
-    var(--announcement-height) + var(--site-header-gap) +
-      var(--site-header-height) + 2 * var(--page-gutter)
+    var(
+        --header-stack-height,
+        calc(
+          var(--announcement-height) + var(--site-header-gap) +
+            var(--site-header-height)
+        )
+      ) +
+      2 * var(--page-gutter)
   );
   padding-block-end: var(--page-gutter);
 }

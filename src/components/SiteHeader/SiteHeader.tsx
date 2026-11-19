@@ -4,6 +4,7 @@ import type { City } from "../../types/city";
 import { faLocationCrosshairs } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./SiteHeader.css";
+import { useLayoutEffect, useRef } from "react";
 
 type SiteHeaderProps = {
   onCitySelect: (city: City) => void;
@@ -17,8 +18,37 @@ export default function SiteHeader({
   onUseLocation,
   isLocating,
 }: SiteHeaderProps) {
+  // Keep the dashboard's top offset synchronized with the actual header height.
+  const headerRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+
+    const root = document.documentElement;
+
+    function updateHeaderHeight() {
+      if (!header) return;
+
+      root.style.setProperty(
+        "--header-stack-height",
+        `${Math.ceil(header.getBoundingClientRect().height)}px`,
+      );
+    }
+
+    updateHeaderHeight();
+    const observer = new ResizeObserver(updateHeaderHeight);
+    observer.observe(header);
+
+    // Remove the measurement when the header unmounts.
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty("--header-stack-height");
+    };
+  }, []);
+
   return (
-    <header className="site-header">
+    <header ref={headerRef} className="site-header">
       <AnnouncementBar />
 
       <div className="site-header__surface">
@@ -28,18 +58,20 @@ export default function SiteHeader({
           <h1 className="site-header__title">MyForecast</h1>
         </div>
 
-        <CitySearch onCitySelect={onCitySelect} />
+        {/* Keep search before location in both visual and keyboard order. */}
+        <div className="site-header__controls">
+          <CitySearch onCitySelect={onCitySelect} />
 
-        {/* Match the visual order to the keyboard order on every screen. */}
-        <button
-          type="button"
-          className="site-header__location"
-          disabled={isLocating}
-          onClick={onUseLocation}
-        >
-          <FontAwesomeIcon icon={faLocationCrosshairs} aria-hidden="true" />
-          <span>{isLocating ? "Finding location…" : "Use my location"}</span>
-        </button>
+          <button
+            type="button"
+            className="site-header__location"
+            disabled={isLocating}
+            onClick={onUseLocation}
+          >
+            <FontAwesomeIcon icon={faLocationCrosshairs} aria-hidden="true" />
+            <span>{isLocating ? "Finding location…" : "Use my location"}</span>
+          </button>
+        </div>
       </div>
     </header>
   );
