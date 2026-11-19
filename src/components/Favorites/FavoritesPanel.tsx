@@ -3,8 +3,9 @@ import { faGripVertical, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { City } from "../../types/city";
 import { formatCity } from "../../utils/formatCity";
-// Keep reorder feedback available to assistive technology.
-import { useState } from "react";
+// Track touch gestures independently of the native desktop drag interaction.
+import { useRef, useState } from "react";
+import type { PointerEvent as ReactPointerEvent } from "react";
 import "./FavoritesPanel.css";
 
 type FavoritesPanelProps = {
@@ -33,6 +34,80 @@ export default function FavoritesPanel({
   const [dropTargetId, setDropTargetId] = useState<number | null>(null);
 
   const draggedIndex = cities.findIndex((city) => city.id === draggedCityId);
+
+  // Restrict touch drop targets to rows in this Favorites list.
+  const listRef = useRef<HTMLUListElement>(null);
+  const pointerDrag = useRef<{
+    pointerId: number;
+    city: City;
+  } | null>(null);
+
+  // Find the favorite directly beneath a touch or pen pointer.
+  function findPointerTarget(clientX: number, clientY: number) {
+    const row = document
+      .elementFromPoint(clientX, clientY)
+      ?.closest<HTMLElement>("[data-favorite-id]");
+
+    if (!row || !listRef.current?.contains(row)) return undefined;
+
+    return cities.find((saved) => String(saved.id) === row.dataset.favoriteId);
+  }
+
+  // Capture touch and pen input so releasing outside the handle still ends the drag.
+  function startPointerDrag(
+    event: ReactPointerEvent<HTMLButtonElement>,
+    city: City,
+  ) {
+    if (
+      event.pointerType === "mouse" ||
+      !event.isPrimary ||
+      event.button !== 0 ||
+      cities.length < 2
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    pointerDrag.current = { pointerId: event.pointerId, city };
+    setDraggedCityId(city.id);
+    setDropTargetId(null);
+    setOrderMessage(`Dragging ${formatCity(city)}.`);
+  }
+
+  // Update the destination marker without modifying the saved order.
+  function movePointerDrag(event: ReactPointerEvent<HTMLButtonElement>) {
+    if (pointerDrag.current?.pointerId !== event.pointerId) return;
+
+    const target = findPointerTarget(event.clientX, event.clientY);
+    setDropTargetId(target?.id ?? null);
+  }
+
+  // Commit only when the pointer is released over another valid favorite.
+  function finishPointerDrag(event: ReactPointerEvent<HTMLButtonElement>) {
+    const gesture = pointerDrag.current;
+    if (!gesture || gesture.pointerId !== event.pointerId) return;
+
+    const target = findPointerTarget(event.clientX, event.clientY);
+
+    if (target && target.id !== gesture.city.id) {
+      moveFavorite(
+        gesture.city,
+        cities.findIndex((saved) => saved.id === target.id),
+      );
+    } else {
+      setOrderMessage(`Finished dragging ${formatCity(gesture.city)}.`);
+    }
+
+    cancelPointerDrag();
+  }
+
+  // A cancelled gesture clears the preview without saving a move.
+  function cancelPointerDrag() {
+    if (!pointerDrag.current) return;
+    pointerDrag.current = null;
+    clearDrag();
+  }
 
   // Clear previews after dropping, cancelling, or leaving the application.
   function clearDrag() {
@@ -78,7 +153,7 @@ export default function FavoritesPanel({
           No favorites yet. Search for a city to save it.
         </p>
       ) : (
-        <ul className="flex flex-col gap-1">
+        <ul ref={listRef} className="flex flex-col gap-1">
           {cities.map((city, index) => (
             <li
               key={city.id}
@@ -113,6 +188,7 @@ export default function FavoritesPanel({
 
                 clearDrag();
               }}
+              data-favorite-id={city.id}
             >
               {/* Load weather for the saved city. */}
               <button
@@ -131,11 +207,6 @@ export default function FavoritesPanel({
                 aria-label={`Reorder ${formatCity(city)}`}
                 aria-describedby="favorites-reorder-help"
                 aria-keyshortcuts="ArrowUp ArrowDown"
-                onClick={() => {
-                  setOrderMessage(
-                    `Use Arrow Up or Arrow Down to reorder ${formatCity(city)}.`,
-                  );
-                }}
                 onKeyDown={(event) => {
                   // Prevent page scrolling only when the handle receives a reorder key.
                   if (event.key !== "ArrowUp" && event.key !== "ArrowDown")
@@ -157,6 +228,11 @@ export default function FavoritesPanel({
                 }}
                 draggable={cities.length > 1}
                 onDragStart={(event) => {
+                  // Prevent native dragging from competing with an active touch gesture.
+                  if (pointerDrag.current) {
+                    event.preventDefault();
+                    return;
+                  }
                   // Supply native drag data and show the complete city row as the drag preview.
                   event.dataTransfer.effectAllowed = "move";
                   event.dataTransfer.setData("text/plain", String(city.id));
@@ -172,6 +248,11 @@ export default function FavoritesPanel({
                   // A cancelled drag leaves the original saved order intact.
                   clearDrag();
                 }}
+                onPointerDown={(event) => startPointerDrag(event, city)}
+                onPointerMove={movePointerDrag}
+                onPointerUp={finishPointerDrag}
+                onPointerCancel={cancelPointerDrag}
+                onLostPointerCapture={cancelPointerDrag}
               >
                 <FontAwesomeIcon icon={faGripVertical} aria-hidden="true" />
               </button>
