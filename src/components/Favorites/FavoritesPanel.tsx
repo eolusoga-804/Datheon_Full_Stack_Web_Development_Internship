@@ -4,7 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { City } from "../../types/city";
 import { formatCity } from "../../utils/formatCity";
 // Track touch gestures independently of the native desktop drag interaction.
-import { useRef, useState } from "react";
+// Coordinate reorder feedback with React's completed layout updates.
+import { useLayoutEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import "./FavoritesPanel.css";
 
@@ -37,6 +38,57 @@ export default function FavoritesPanel({
 
   // Restrict touch drop targets to rows in this Favorites list.
   const listRef = useRef<HTMLUListElement>(null);
+
+  // Remember which city should receive landing feedback after its position changes.
+  const landingCityId = useRef<number | null>(null);
+
+  // Animate the moved row after React places it in its new location.
+  useLayoutEffect(() => {
+    const cityId = landingCityId.current;
+    landingCityId.current = null;
+
+    if (cityId === null) return;
+
+    const row = listRef.current?.querySelector<HTMLElement>(
+      `[data-favorite-id="${cityId}"]`,
+    );
+
+    if (!row) return;
+
+    // Keep a stationary color pulse when reduced motion is requested.
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    const animation = row.animate(
+      [
+        {
+          transform: reducedMotion ? "none" : "translateY(-7px)",
+          backgroundColor: "rgb(139 92 246 / 35%)",
+          boxShadow: "inset 0 0 0 1px #a8c5ff",
+        },
+        {
+          transform: "none",
+          backgroundColor: "rgb(96 165 250 / 18%)",
+          boxShadow: "inset 0 0 0 1px rgb(168 197 255 / 40%)",
+          offset: 0.65,
+        },
+        {
+          transform: "none",
+          backgroundColor: "transparent",
+          boxShadow: "inset 0 0 0 1px transparent",
+        },
+      ],
+      {
+        duration: reducedMotion ? 250 : 550,
+        easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+      },
+    );
+
+    // Cancel unfinished feedback if the list changes again or unmounts.
+    return () => animation.cancel();
+  }, [cities]);
+
   const pointerDrag = useRef<{
     pointerId: number;
     city: City;
@@ -115,10 +167,22 @@ export default function FavoritesPanel({
     setDropTargetId(null);
   }
 
+  // Persist a valid move and mark the city for feedback in its new location.
   function moveFavorite(city: City, targetIndex: number) {
-    onMoveCity(city.id, targetIndex);
+    const sourceIndex = cities.findIndex((saved) => saved.id === city.id);
 
-    // Describe the move without introducing numbered positions.
+    if (
+      sourceIndex < 0 ||
+      !Number.isInteger(targetIndex) ||
+      targetIndex < 0 ||
+      targetIndex >= cities.length ||
+      targetIndex === sourceIndex
+    ) {
+      return;
+    }
+
+    landingCityId.current = city.id;
+    onMoveCity(city.id, targetIndex);
     setOrderMessage(`${formatCity(city)} moved in Favorites.`);
   }
 
