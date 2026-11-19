@@ -121,7 +121,7 @@ export default function ForecastPanel({
                   <WeatherIcon
                     conditionCode={day.conditionCode}
                     providerIconCode={day.providerIconCode}
-                    className="self-start text-xl text-sky-200"
+                    className="text-xl text-sky-200"
                   />
                   <p className="dashboard__description text-xs capitalize">
                     {day.description}

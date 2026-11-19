@@ -1,22 +1,23 @@
-/* Let cards wrap when the panel cannot fit another readable column. */
+/* Center the telemetry heading while keeping the section compact. */
 .weather-telemetry {
   display: flex;
   flex-direction: column;
   gap: 0.375rem;
   margin-block-start: 0.375rem;
+  text-align: center;
 }
 
+/* Fit additional columns whenever the panel has enough available width. */
 .weather-telemetry__list {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 115px), 1fr));
   gap: 0.375rem;
 }
 
+/* Keep measurements readable within equal-width glass cards. */
 .weather-telemetry__card {
-  /* Keep two equal columns without stretching an unmatched final card. */
-  flex: 0 0 calc((100% - 0.375rem) / 2);
   min-inline-size: 0;
-  padding: 0.5rem 0.625rem;
+  padding: 0.5rem;
   border: 1px solid var(--glass-border);
   border-radius: 0.75rem;
   background: rgb(143 169 255 / 10%);
@@ -24,22 +25,17 @@
   overflow-wrap: anywhere;
 }
 
+/* Center each label and allow longer labels to wrap. */
 .weather-telemetry__label {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.375rem;
   color: var(--color-text-muted);
   font-size: 0.75rem;
 }
 
-/* Fit four telemetry columns when the viewport provides enough space. */
-@media (min-width: 48rem) {
-  .weather-telemetry__card {
-    flex-basis: calc((100% - 1.125rem) / 4);
-  }
-}
-
-/* Keep icons intact while allowing long measurement labels to wrap. */
+/* Preserve icon proportions when the label text wraps. */
 .weather-telemetry__label > svg {
   flex-shrink: 0;
 }
