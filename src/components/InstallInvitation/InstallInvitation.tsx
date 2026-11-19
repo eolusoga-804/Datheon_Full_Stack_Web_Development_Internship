@@ -3,18 +3,11 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import "./InstallInvitation.css";
 
-const DISMISSAL_KEY = "myforecast:install-dismissed";
+// Remember installation separately from the current page's popup dismissal.
+const INSTALLED_KEY = "myforecast:installed";
 
 interface InstallPromptEvent extends Event {
   prompt(): Promise<unknown>;
-}
-
-function readDismissal() {
-  try {
-    return localStorage.getItem(DISMISSAL_KEY) === "yes";
-  } catch {
-    return false;
-  }
 }
 
 function isStandalone() {
@@ -25,9 +18,31 @@ function isStandalone() {
   );
 }
 
+// Hide the invitation when launched as an app or when installation was recorded.
+function readInstalled() {
+  if (isStandalone()) return true;
+
+  try {
+    return localStorage.getItem(INSTALLED_KEY) === "yes";
+  } catch {
+    return false;
+  }
+}
+
+// Keep installation memory optional when browser storage is unavailable.
+function rememberInstallation() {
+  try {
+    localStorage.setItem(INSTALLED_KEY, "yes");
+  } catch {
+    // Standalone detection and component state still apply for this visit.
+  }
+}
+
 export default function InstallInvitation({ paused }: { paused: boolean }) {
-  const [dismissed, setDismissed] = useState(readDismissal);
-  const [standalone, setStandalone] = useState(isStandalone);
+  // Reset dismissal on reload while preserving known installation status.
+  const [dismissed, setDismissed] = useState(false);
+  const [installed, setInstalled] = useState(readInstalled);
+
   const [pendingPrompt, setPendingPrompt] = useState<InstallPromptEvent | null>(
     null,
   );
@@ -39,9 +54,9 @@ export default function InstallInvitation({ paused }: { paused: boolean }) {
     /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
     (/Macintosh/i.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
 
-  // Capture browser eligibility while the name dialog is open, too.
+  // Monitor installation even after the user dismisses the custom invitation.
   useEffect(() => {
-    if (dismissed || standalone) return;
+    if (isStandalone()) rememberInstallation();
 
     function capturePrompt(event: Event) {
       event.preventDefault();
@@ -49,7 +64,8 @@ export default function InstallInvitation({ paused }: { paused: boolean }) {
     }
 
     function handleInstalled() {
-      setStandalone(true);
+      rememberInstallation();
+      setInstalled(true);
       setPendingPrompt(null);
     }
 
@@ -60,16 +76,11 @@ export default function InstallInvitation({ paused }: { paused: boolean }) {
       window.removeEventListener("beforeinstallprompt", capturePrompt);
       window.removeEventListener("appinstalled", handleInstalled);
     };
-  }, [dismissed, standalone]);
+  }, []);
 
+  // Hide the invitation for this page load without permanently dismissing it.
   function dismiss() {
     setDismissed(true);
-
-    try {
-      localStorage.setItem(DISMISSAL_KEY, "yes");
-    } catch {
-      // Keep the dismissal for this visit when storage is unavailable.
-    }
   }
 
   async function install() {
@@ -89,7 +100,9 @@ export default function InstallInvitation({ paused }: { paused: boolean }) {
     }
   }
 
-  if (paused || dismissed || standalone) return null;
+  // Suppress the invitation after dismissal or a detected installation.
+  if (paused || dismissed || installed) return null;
+
   if (!pendingPrompt && !isAppleMobile && !promptFailed) return null;
 
   // Keep installation optional without blocking dashboard interaction or moving focus.
