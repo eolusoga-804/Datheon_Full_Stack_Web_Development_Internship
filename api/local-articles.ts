@@ -1,5 +1,9 @@
 const GUARDIAN_SEARCH_URL = "https://content.guardianapis.com/search";
-const ARTICLE_LIMIT = 4;
+
+// Search a larger candidate pool and return up to eight relevant articles.
+const ARTICLE_LIMIT = 8;
+const ARTICLE_CANDIDATE_LIMIT = 50;
+
 const TIMEOUT_MS = 8_000;
 const CITY_NAME_PATTERN = /^[\p{L}\p{M}\p{N} .,'’()-]+$/u;
 
@@ -70,11 +74,13 @@ export default {
 
     // Search for the city as a phrase alongside weather topics.
     const upstream = new URL(GUARDIAN_SEARCH_URL);
+
+    // Retrieve more candidates in one request while preserving location relevance.
     upstream.search = new URLSearchParams({
       "api-key": apiKey,
       q: `"${city}" AND (weather OR flooding OR heatwave OR storm)`,
       type: "article",
-
+      "page-size": String(ARTICLE_CANDIDATE_LIMIT),
       "order-by": "relevance",
     }).toString();
 
