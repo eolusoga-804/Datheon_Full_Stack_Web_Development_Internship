@@ -1,0 +1,40 @@
+/* This block loads the store's sans-serif, serif, and monospace fonts. */
+@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap");
+
+/* This block establishes shared colors, typography, and box sizing. */
+:root {
+  font-family: "DM Sans", sans-serif;
+  color: #28231f;
+  background: #fffdf9;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+}
+
+/* This block keeps keyboard focus visible on interactive elements. */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid #b64c27;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

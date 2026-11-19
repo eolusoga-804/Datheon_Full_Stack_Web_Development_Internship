@@ -1,0 +1,111 @@
+/* This block keeps the header visible at the top while scrolling. */
+.store-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-bottom: 1px solid #e9e2d9;
+  background: #fffdf9;
+}
+
+/* This block aligns header content within the storefront's 1140px width. */
+.store-header__inner {
+  width: min(100% - 32px, 1140px);
+  min-height: 64px;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* This block styles the store identity link. */
+.store-header__brand {
+  display: inline-flex;
+  align-items: center;
+  color: #25221f;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.83rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* This block styles the cart button and its contents. */
+.store-header__cart-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 1px solid #25221f;
+  background: transparent;
+  color: #25221f;
+  cursor: pointer;
+  font:
+    600 0.78rem "DM Sans",
+    sans-serif;
+}
+
+/* This block sizes the cart outline icon. */
+.store-header__cart-icon {
+  width: 19px;
+  height: 19px;
+}
+
+/* This block highlights the item count in the orange accent. */
+.store-header__cart-count {
+  display: grid;
+  min-width: 20px;
+  height: 20px;
+  padding-inline: 3px;
+  place-items: center;
+  background: #f36b35;
+  color: #fff;
+  font:
+    0.68rem "DM Mono",
+    monospace;
+}
+
+/* This block shows keyboard focus on the header cart button. */
+.store-header__cart-trigger:focus-visible {
+  outline: 2px solid #b64c27;
+  outline-offset: 3px;
+}
+
+/* This block adds cart-button hover feedback on medium and wider screens. */
+@media (min-width: 640px) and (hover: hover) and (pointer: fine) {
+  .store-header__cart-trigger {
+    transition:
+      background-color 160ms ease,
+      color 160ms ease,
+      transform 160ms ease;
+  }
+
+  .store-header__cart-trigger:hover {
+    background: #28231f;
+    color: #fffaf4;
+    transform: translateY(-2px);
+  }
+}
+
+/* This block keeps the header compact on narrow screens. */
+@media (max-width: 430px) {
+  .store-header__inner {
+    width: calc(100% - 20px);
+    gap: 8px;
+  }
+
+  .store-header__brand {
+    max-width: 68%;
+    font-size: 0.7rem;
+  }
+
+  .store-header__cart-trigger {
+    gap: 5px;
+    padding: 5px;
+    font-size: 0.68rem;
+  }
+
+  .store-header__cart-icon {
+    width: 17px;
+    height: 17px;
+  }
+}

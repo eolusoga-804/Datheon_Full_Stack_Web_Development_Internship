@@ -1,0 +1,283 @@
+/* This block styles the product image, details, and rectangular action. */
+.product-card {
+  min-width: 0;
+  border: 1px solid #e9e2d9;
+  background: #fffdf9;
+}
+
+.product-card__image-wrap {
+  position: relative;
+  display: grid;
+  aspect-ratio: 1 / 0.82;
+  place-items: center;
+  overflow: hidden;
+  background: #f7f3ed;
+}
+
+.product-card__image {
+  width: 72%;
+  height: 72%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+.product-card__badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 5px 7px;
+  background: #f36b35;
+  color: #fffaf4;
+  font:
+    0.58rem "DM Mono",
+    monospace;
+}
+
+.product-card__details {
+  padding: 10px;
+}
+
+.product-card__category {
+  margin: 0 0 5px;
+  color: #756d63;
+  font:
+    0.6rem "DM Mono",
+    monospace;
+  text-transform: uppercase;
+}
+
+.product-card__title {
+  min-height: 2.5em;
+  margin: 0;
+  display: -webkit-box;
+  overflow: hidden;
+  color: #28231f;
+  font:
+    600 0.82rem/1.25 "DM Sans",
+    sans-serif;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.product-card__meta {
+  margin: 9px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.product-card__price {
+  font:
+    700 0.83rem "DM Sans",
+    sans-serif;
+}
+
+.product-card__rating {
+  color: #8e4b1d;
+  font:
+    0.68rem "DM Mono",
+    monospace;
+}
+
+.product-card__action {
+  width: 100%;
+  padding: 9px 8px;
+  border: 1px solid #28231f;
+  background: #28231f;
+  color: #fffaf4;
+  cursor: pointer;
+  font:
+    600 0.72rem "DM Sans",
+    sans-serif;
+}
+
+.product-card__action:hover {
+  background: #f36b35;
+  border-color: #f36b35;
+}
+
+/* This block gives the product action a clear keyboard focus indicator. */
+.product-card__action:focus-visible {
+  outline: 2px solid #b64c27;
+  outline-offset: 3px;
+}
+
+/* This block fades and lifts each product card into view. */
+.product-card {
+  animation: product-card-enter 480ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  position: relative;
+}
+
+/* This block zooms each add-to-cart action into view after its card appears. */
+.product-card__action {
+  animation: product-card-action-zoom 360ms cubic-bezier(0.2, 0.75, 0.25, 1)
+    both;
+}
+
+/* This block raises the active card above neighboring cards. */
+.product-card--description-open,
+.product-card:has(.product-card__image:hover),
+.product-card:has(.product-card__title:hover),
+.product-card:has(.product-card__image:focus-visible),
+.product-card:has(.product-card__title:focus-visible) {
+  z-index: 10;
+}
+
+/* This block opens the product description after a long press on smaller and medium screens. */
+@media (max-width: 899px) {
+  .product-card--description-open .product-card__description-popover {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+  }
+
+  .product-card__image,
+  .product-card__title {
+    touch-action: manipulation;
+    user-select: none;
+  }
+}
+
+/* This animation brings the action button forward with a soft zoom. */
+@keyframes product-card-action-zoom {
+  from {
+    opacity: 0;
+    transform: scale(0.86);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* This block disables the button entrance animation for reduced-motion users. */
+@media (prefers-reduced-motion: reduce) {
+  .product-card__action {
+    animation: none;
+  }
+}
+
+/* This animation brings each card up from a slightly lower position. */
+@keyframes product-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* This block skips the entrance motion when reduced motion is preferred. */
+@media (prefers-reduced-motion: reduce) {
+  .product-card {
+    animation: none;
+  }
+}
+
+/* This block adds hover feedback to product actions on medium and wider screens. */
+@media (min-width: 900px) and (hover: hover) and (pointer: fine) {
+  .product-card__action {
+    transition:
+      background-color 160ms ease,
+      border-color 160ms ease,
+      transform 160ms ease;
+  }
+
+  .product-card__action:hover {
+    border-color: #f36b35;
+    background: #f36b35;
+    transform: translateY(-2px);
+  }
+}
+
+/* This block lets the popup grow with its description while keeping a readable translucent background. */
+.product-card__description-popover {
+  position: absolute;
+  z-index: 6;
+  top: 8px;
+  right: 8px;
+  left: 8px;
+  box-sizing: border-box;
+  height: auto;
+  padding: 14px;
+  border: 1px solid rgb(255 250 244 / 32%);
+  background: rgb(40 35 31 / 87%);
+  box-shadow: 0 12px 32px rgb(40 35 31 / 24%);
+  color: #fffaf4;
+  font:
+    0.76rem/1.55 "DM Sans",
+    sans-serif;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.96);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease,
+    visibility 180ms ease;
+  max-height: min(70vh, 100%);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* This block distinguishes the popup label from the description copy. */
+.product-card__description-label {
+  display: block;
+  margin-bottom: 6px;
+  color: #f5a27f;
+  font:
+    0.62rem/1.4 "DM Mono",
+    monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* This block removes default paragraph spacing while keeping the full description readable. */
+.product-card__description-copy {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* This block marks the image and title as keyboard-focusable triggers. */
+.product-card__image:focus-visible,
+.product-card__title:focus-visible {
+  outline: 2px solid #b64c27;
+  outline-offset: 2px;
+}
+
+/* This block reveals the popup when the image or title is hovered. */
+@media (min-width: 900px) and (hover: hover) and (pointer: fine) {
+  .product-card:has(.product-card__image:hover)
+    .product-card__description-popover,
+  .product-card:has(.product-card__title:hover)
+    .product-card__description-popover,
+  .product-card:has(.product-card__description-popover:hover)
+    .product-card__description-popover {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+  }
+}
+
+/* This block reveals the popup when keyboard focus reaches the image or title. */
+@media (min-width: 640px) {
+  .product-card:has(.product-card__image:focus-visible)
+    .product-card__description-popover,
+  .product-card:has(.product-card__title:focus-visible)
+    .product-card__description-popover {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+  }
+}
+
+/* This block disables popup transitions for reduced-motion preferences. */
+@media (prefers-reduced-motion: reduce) {
+  .product-card__description-popover {
+    transition: none;
+  }
+}
