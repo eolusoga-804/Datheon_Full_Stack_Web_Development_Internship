@@ -68,6 +68,19 @@ export const storeContent = {
     descriptionLongPressMs: 520,
     // This label introduces the full product description in its popup.
     descriptionLabel: "About this find",
+    // These labels show the search shortcut for Apple and other desktop platforms.
+    appleSearchShortcutLabel: "⌘ K",
+    standardSearchShortcutLabel: "Ctrl K",
+    // This block centralizes the first-visit search tip copy and storage key.
+    searchTip: {
+      storageKey: "emmanuel804-search-tip-dismissed",
+      label: "Search tip",
+      compactInstruction:
+        "Tap the search field to find a product by name or keyword.",
+      wideInstruction: "Jump to product search with",
+      actionLabel: "Try search",
+      dismissLabel: "Dismiss search tip",
+    },
   },
 
   // This block centralizes footer copy and its background watermark.

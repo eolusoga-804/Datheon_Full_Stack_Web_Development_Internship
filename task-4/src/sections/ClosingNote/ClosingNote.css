@@ -34,8 +34,14 @@
   margin: 0;
   color: #28231f;
   font:
-    500 clamp(1rem, 2vw, 1.3rem)/1.2 "Playfair Display",
+    500 clamp(1rem, 2vw, 1.3rem)/1.3 "Playfair Display",
     serif;
+  display: inline-block;
+  width: max-content;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  animation: closing-note-title-type 6.4s steps(29, end) infinite;
 }
 
 /* This block keeps the supporting note compact and readable. */
@@ -61,6 +67,19 @@
   }
 }
 
+/* This animation types the closing heading, pauses briefly, then erases it. */
+@keyframes closing-note-title-type {
+  0%,
+  100% {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  42%,
+  60% {
+    clip-path: inset(0);
+  }
+}
+
 /* This block stacks the editorial copy on narrow screens. */
 @media (max-width: 560px) {
   .closing-note {
@@ -74,9 +93,18 @@
   }
 }
 
-/* This block disables the entrance effect for reduced-motion preferences. */
+/* This block disables the closing section and title animations for reduced-motion preferences. */
 @media (prefers-reduced-motion: reduce) {
-  .closing-note {
+  .closing-note,
+  .closing-note__title {
     animation: none;
+  }
+
+  .closing-note__title {
+    width: auto;
+    max-width: 100%;
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
   }
 }

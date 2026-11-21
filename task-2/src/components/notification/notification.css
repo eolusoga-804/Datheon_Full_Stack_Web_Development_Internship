@@ -1,0 +1,57 @@
+/* Blurs and dims the full interface while the task alert is visible. */
+.app-notification-backdrop {
+  position: fixed;
+  z-index: 40;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgb(5 5 12 / 34%);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+/* Keeps the closed notification layer out of view and layout. */
+.app-notification-backdrop[hidden] {
+  display: none;
+}
+
+/* Fades in the full-screen blur when the popup appears. */
+.app-notification-backdrop--visible {
+  opacity: 1;
+}
+
+/* Styles the task message as a compact card at the viewport center. */
+.app-notification {
+  width: min(420px, 100%);
+  padding: 14px 18px;
+  transform: translateY(8px);
+  border: 1px solid #51377d;
+  border-radius: 12px;
+  background: #11101d;
+  color: var(--color-text);
+  box-shadow: 0 12px 36px rgb(0 0 0 / 42%);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  opacity: 0;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+/* Settles the popup into the center as the backdrop fades in. */
+.app-notification-backdrop--visible .app-notification {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Removes popup motion when reduced motion is preferred. */
+@media (prefers-reduced-motion: reduce) {
+  .app-notification-backdrop,
+  .app-notification {
+    transition: none;
+  }
+}

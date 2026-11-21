@@ -1,5 +1,5 @@
-// This section loads, searches, filters, sorts, and displays catalog products.
-import { useState } from "react";
+// These hooks manage catalog search state and the global shortcut listener.
+import { useEffect, useRef, useState } from "react";
 import useProducts from "../../hooks/useProducts";
 import { storeContent } from "../../data/storeContent";
 import ProductCard from "../../components/ProductCard/ProductCard";
@@ -40,12 +40,113 @@ export default function ProductCatalog({ onAddToCart }) {
     );
   }
 
+  // This ref lets the keyboard shortcut focus the search field.
+  const searchInputRef = useRef(null);
+
+  // This check selects the shortcut label that matches the current platform.
+  const platform = navigator.userAgentData?.platform ?? navigator.platform;
+  const isApplePlatform = /Mac|iPhone|iPad|iPod/i.test(platform);
+  const searchShortcutLabel = isApplePlatform
+    ? storeContent.catalog.appleSearchShortcutLabel
+    : storeContent.catalog.standardSearchShortcutLabel;
+
+  // This state shows the search tip until the shopper dismisses it once.
+  const [isSearchTipOpen, setIsSearchTipOpen] = useState(() => {
+    try {
+      return (
+        window.localStorage.getItem(
+          storeContent.catalog.searchTip.storageKey,
+        ) !== "dismissed"
+      );
+    } catch {
+      return true;
+    }
+  });
+
+  // This handler closes the tip and remembers the dismissal for future visits.
+  function dismissSearchTip() {
+    setIsSearchTipOpen(false);
+
+    try {
+      window.localStorage.setItem(
+        storeContent.catalog.searchTip.storageKey,
+        "dismissed",
+      );
+    } catch {
+      // This fallback keeps the tip dismissible when browser storage is unavailable.
+    }
+  }
+
+  // This listener focuses the search field when the shopper presses Ctrl+K or Command+K.
+  useEffect(() => {
+    function handleSearchShortcut(event) {
+      if (
+        event.key.toLowerCase() !== "k" ||
+        (!event.ctrlKey && !event.metaKey) ||
+        event.altKey ||
+        event.shiftKey
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      searchInputRef.current?.focus();
+    }
+
+    window.addEventListener("keydown", handleSearchShortcut);
+
+    return () => {
+      window.removeEventListener("keydown", handleSearchShortcut);
+    };
+  }, []);
+
   return (
     <section
       className="product-catalog"
       id="catalog"
       aria-labelledby="product-catalog-title"
     >
+      {/* This first-visit tip explains how to reach product search. */}
+      {isSearchTipOpen && (
+        <aside
+          className="product-catalog__search-tip"
+          aria-label={storeContent.catalog.searchTip.label}
+        >
+          <p className="product-catalog__search-tip-copy">
+            <span className="product-catalog__search-tip-compact">
+              {storeContent.catalog.searchTip.compactInstruction}
+            </span>
+            <span className="product-catalog__search-tip-wide">
+              {storeContent.catalog.searchTip.wideInstruction}{" "}
+              <kbd>{searchShortcutLabel}</kbd>
+            </span>
+          </p>
+
+          {/* This button dismisses the tip and focuses the search input. */}
+          <button
+            className="product-catalog__search-tip-action"
+            type="button"
+            aria-controls="product-search-input"
+            onClick={() => {
+              searchInputRef.current?.focus();
+              dismissSearchTip();
+            }}
+          >
+            {storeContent.catalog.searchTip.actionLabel}
+          </button>
+
+          {/* This button closes the tip without opening search. */}
+          <button
+            className="product-catalog__search-tip-close"
+            type="button"
+            aria-label={storeContent.catalog.searchTip.dismissLabel}
+            onClick={dismissSearchTip}
+          >
+            ×
+          </button>
+        </aside>
+      )}
+
       <div className="product-catalog__heading">
         <div>
           <p className="product-catalog__eyebrow">
@@ -58,17 +159,31 @@ export default function ProductCatalog({ onAddToCart }) {
       </div>
 
       <div className="product-catalog__tools">
+        {/* This label places the platform-specific shortcut hint inside the search field. */}
         <label className="product-catalog__search">
           <span className="product-catalog__search-label">
             {storeContent.catalog.searchLabel}
           </span>
-          <input
-            className="product-catalog__search-input"
-            type="search"
-            value={searchTerm}
-            placeholder={storeContent.catalog.searchPlaceholder}
-            onChange={(event) => setSearchTerm(event.target.value)}
-          />
+
+          {/* This wrapper positions the shortcut hint within the input outline. */}
+          <span className="product-catalog__search-control">
+            <input
+              ref={searchInputRef}
+              className="product-catalog__search-input"
+              type="search"
+              value={searchTerm}
+              placeholder={storeContent.catalog.searchPlaceholder}
+              aria-keyshortcuts="Control+K Meta+K"
+              onChange={(event) => setSearchTerm(event.target.value)}
+              id="product-search-input"
+            />
+            <kbd
+              className="product-catalog__search-shortcut"
+              aria-hidden="true"
+            >
+              {searchShortcutLabel}
+            </kbd>
+          </span>
         </label>
 
         <label className="product-catalog__sort">

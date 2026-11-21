@@ -67,7 +67,7 @@
 }
 
 .task-form__title-icon,
-.task-form__date-field > .fi-rr-calendar {
+.task-form__date-button > .fi-rr-calendar {
   flex: 0 0 auto;
   color: var(--color-accent-bright);
 }
@@ -106,6 +106,38 @@
   padding-inline: 0;
 }
 
+/* Gives the calendar control clear hover, focus, and press feedback. */
+.task-form__date-button {
+  display: grid;
+  width: 100%;
+  min-height: 42px;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-accent-bright);
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    transform 120ms ease;
+}
+
+.task-form__date-button:hover {
+  background: rgb(135 60 255 / 16%);
+  color: #d3b4ff;
+}
+
+.task-form__date-button:focus-visible {
+  outline: 2px solid var(--color-accent-bright);
+  outline-offset: -3px;
+  background: rgb(135 60 255 / 18%);
+}
+
+.task-form__date-button:active {
+  transform: scale(0.94);
+}
+
 /* Makes the labeled date input cover the icon while hiding its native UI. */
 .task-form__date {
   position: absolute;
@@ -118,38 +150,59 @@
   pointer-events: none;
 }
 
+/* Styles the Add Task control with a clear accent, hover, and focus state. */
 .task-form__submit {
   display: flex;
+  width: 100%;
+  min-width: 0;
   min-height: 44px;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  border: 0;
+  gap: 7px;
+  padding: 0 12px;
+  border: 1px solid transparent;
   border-radius: 9px;
-  background: linear-gradient(110deg, #923cff, #6f28db);
-  color: white;
+  background: linear-gradient(115deg, #a64bff, #6f28db);
+  color: #fff;
+  box-shadow: 0 5px 16px rgb(111 40 219 / 22%);
   cursor: pointer;
   font-size: 0.82rem;
   font-weight: 800;
+  transition:
+    background 160ms ease,
+    box-shadow 160ms ease,
+    transform 120ms ease;
 }
 
-/* Makes the creation icon prominent inside the Add Task button. */
+/* Keeps the add icon prominent and aligned with its label. */
 .task-form__submit-icon {
-  font-size: 1.2rem;
+  flex: 0 0 auto;
+  font-size: 1.15rem;
   font-weight: 900;
   line-height: 1;
 }
 
+/* Brightens the button on hover and provides a visible keyboard focus. */
 .task-form__submit:hover {
-  filter: brightness(1.12);
+  background: linear-gradient(115deg, #b46aff, #813be8);
+  box-shadow: 0 7px 20px rgb(111 40 219 / 34%);
 }
 
-.task-form__feedback {
-  grid-column: 1 / -1;
-  min-height: 0;
-  margin: 0;
-  color: #c9a6ff;
-  font-size: 0.72rem;
+.task-form__submit:focus-visible {
+  outline: 2px solid #d3b4ff;
+  outline-offset: 3px;
+}
+
+/* Adds a small press response without changing the button's layout. */
+.task-form__submit:active {
+  transform: scale(0.98);
+}
+
+/* Shows that task creation is unavailable if the button is disabled. */
+.task-form__submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+  box-shadow: none;
 }
 
 .visually-hidden {
@@ -175,13 +228,12 @@
 
   .task-form__title-field,
   .task-form__submit,
-  .task-form__feedback,
   .task-form__description-field {
     grid-column: 1 / -1;
   }
 
   /* Scales the calendar icon for compact touch controls. */
-  .task-form__date-field > .fi-rr-calendar {
+  .task-form__date-button > .fi-rr-calendar {
     font-size: 1rem;
     pointer-events: none;
   }
@@ -215,10 +267,6 @@
   .task-form__submit {
     grid-column: auto;
   }
-
-  .task-form__feedback {
-    grid-column: 1 / -1;
-  }
 }
 
 /* Keeps all task fields on one row when the workspace has sufficient width. */
@@ -232,8 +280,8 @@
   }
 
   .task-form__fields {
-    /* Gives capped fields fixed tracks and lets description fill remaining space. */
-    grid-template-columns: 205px minmax(120px, 1fr) 95px 95px auto;
+    /* Splits remaining space at a 1.3-to-1 title and description ratio. */
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) 95px 95px 95px;
     align-items: start;
     padding: 0;
   }
@@ -249,13 +297,16 @@
     max-width: 95px;
   }
 
-  /* Caps only the desktop task title field at 205px. */
-  .task-form__title-field {
-    max-width: 205px;
+  /* Matches the Add Task button to the 95px category and date controls. */
+  .task-form__submit {
+    width: 100%;
+    min-width: 0;
+    gap: 4px;
+    padding-inline: 3px;
+    font-size: 0.72rem;
   }
 
-  .task-form__submit {
-    min-width: 105px;
-    padding-inline: 12px;
+  .task-form__submit-icon {
+    font-size: 1rem;
   }
 }

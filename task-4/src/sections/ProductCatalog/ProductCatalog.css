@@ -27,16 +27,16 @@
 .product-catalog__title {
   margin: 0;
   color: #28231f;
-  font:
-    500 clamp(1.5rem, 4vw, 2.2rem)/1.1 "Playfair Display",
-    serif;
   /* This clip reveals the configured heading from left to right on page load. */
   width: max-content;
   max-width: 100%;
   overflow: hidden;
   white-space: nowrap;
-  animation: product-catalog-title-type 1.4s steps(14, end) both;
   margin-inline: auto;
+  font:
+    500 clamp(1.5rem, 4vw, 2.2rem)/1.2 "Playfair Display",
+    serif;
+  animation: product-catalog-title-type 4.2s steps(14, end) infinite;
 }
 
 .product-catalog__grid {
@@ -195,13 +195,128 @@
     sans-serif;
 }
 
-/* This animation reveals the catalog heading in typing-like steps. */
+/* This block anchors the shortcut hint inside the search field. */
+.product-catalog__search-control {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+/* This block leaves room for the shortcut hint inside the input outline. */
+.product-catalog__search-input {
+  padding-right: 76px;
+}
+
+/* This block positions and styles the shortcut hint inside the field. */
+.product-catalog__search-shortcut {
+  position: absolute;
+  top: 50%;
+  right: 9px;
+  padding: 2px 5px;
+  border: 1px solid #d9d0c5;
+  color: #756d63;
+  font:
+    0.58rem "DM Mono",
+    monospace;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+/* This block hides the hint while shoppers focus or type in the field. */
+.product-catalog__search-input:focus + .product-catalog__search-shortcut,
+.product-catalog__search-input:not(:placeholder-shown)
+  + .product-catalog__search-shortcut {
+  opacity: 0;
+}
+
+/* This block places the search tip near the top of the page below the sticky header. */
+.product-catalog__search-tip {
+  position: fixed;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  width: min(calc(100% - 24px), 440px);
+  padding: 12px 42px 12px 14px;
+  border: 1px solid rgb(255 250 244 / 40%);
+  background: rgb(40 35 31 / 96%);
+  box-shadow: 0 12px 32px rgb(40 35 31 / 20%);
+  color: #fffaf4;
+  transform: translateX(-50%);
+  z-index: 30;
+  top: calc(env(safe-area-inset-top, 0px) + 104px);
+}
+
+/* This block keeps the responsive tip instruction compact and readable. */
+.product-catalog__search-tip-copy {
+  flex: 1;
+  margin: 0;
+  font:
+    0.72rem/1.45 "DM Sans",
+    sans-serif;
+}
+
+/* This block shows the mobile and tablet instruction by default. */
+.product-catalog__search-tip-wide {
+  display: none;
+}
+
+/* This block styles the action that focuses the search input. */
+.product-catalog__search-tip-action {
+  flex: 0 0 auto;
+  padding: 7px 9px;
+  border: 1px solid #f36b35;
+  background: #f36b35;
+  color: #fffaf4;
+  cursor: pointer;
+  font:
+    600 0.68rem "DM Sans",
+    sans-serif;
+}
+
+/* This block styles the button that dismisses the search tip. */
+.product-catalog__search-tip-close {
+  position: absolute;
+  top: 5px;
+  right: 7px;
+  padding: 2px 5px;
+  border: 0;
+  background: transparent;
+  color: #fffaf4;
+  cursor: pointer;
+  font:
+    1.1rem/1 "DM Sans",
+    sans-serif;
+}
+
+/* This block gives both tip buttons a visible keyboard focus outline. */
+.product-catalog__search-tip-action:focus-visible,
+.product-catalog__search-tip-close:focus-visible {
+  outline: 2px solid #f5a27f;
+  outline-offset: 3px;
+}
+
+/* This block switches to the keyboard shortcut instruction on wide screens. */
+@media (min-width: 900px) {
+  .product-catalog__search-tip-compact {
+    display: none;
+  }
+
+  .product-catalog__search-tip-wide {
+    display: inline;
+  }
+}
+
+/* This animation types the catalog heading, pauses briefly, then erases it. */
 @keyframes product-catalog-title-type {
-  from {
+  0%,
+  100% {
     clip-path: inset(0 100% 0 0);
   }
 
-  to {
+  45%,
+  58% {
     clip-path: inset(0);
   }
 }
