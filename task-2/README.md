@@ -1,4 +1,4 @@
-# Tasks Manager V1
+# Tasks Manager
 
 Tasks Manager is a responsive task management and productivity tracking application. It helps users organize tasks, track deadlines, and monitor completion progress in one place.
 
