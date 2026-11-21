@@ -1,0 +1,94 @@
+
+name: Synchronize Internship Projects
+
+on:
+  repository_dispatch:
+    types: [sync-projects]
+  workflow_dispatch:
+  schedule:
+    - cron: "17 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: datheon-project-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Check for submodules
+        shell: bash
+        run: |
+          for folder in task-2 task-3 task-4; do
+            mode=$(git ls-tree HEAD "$folder" | awk '{print $1}')
+            if [ "$mode" = "160000" ]; then
+              echo "::error::$folder is a submodule"
+              exit 1
+            fi
+          done
+
+      - name: Synchronize and push
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git checkout -B sync-work origin/main
+
+            for task in task-2 task-3 task-4; do
+              git clone --depth 1 --branch main \
+                "https://github.com/eolusoga-804/$task.git" \
+                "$RUNNER_TEMP/$task"
+
+              mkdir -p "$task"
+
+              rsync -a --delete \
+                --exclude='.git/' \
+                --exclude='.github/' \
+                --exclude='node_modules/' \
+                --exclude='.env' \
+                --exclude='.env.*' \
+                --exclude='.vercel/' \
+                --exclude='dist/' \
+                --exclude='build/' \
+                "$RUNNER_TEMP/$task/" "$task/"
+
+              rm -rf "$RUNNER_TEMP/$task"
+            done
+
+            git add -A -- task-2 task-3 task-4
+
+            if git diff --cached --quiet; then
+              echo "All projects are up to date."
+              exit 0
+            fi
+
+            git commit -m "chore: synchronize internship projects"
+
+            if git push origin HEAD:main; then
+              echo "Synchronization successful."
+              exit 0
+            fi
+
+            echo "Push conflict; retrying with latest main..."
+            sleep $((attempt * 2))
+          done
+
+          echo "::error::Synchronization failed after 5 attempts"
+          exit 1
