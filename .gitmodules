@@ -1,0 +1,6 @@
+[submodule "task-2"]
+	branch = main
+[submodule "task-3"]
+	branch = main
+[submodule "task-4"]
+	branch = main
